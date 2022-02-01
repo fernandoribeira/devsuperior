@@ -1,0 +1,106 @@
+
+- Algoritmo
+
+	Sequência finita de instruções para se resolver um problema, aplicando-se a diversas áreas de conhecimento.
+
+- Automação
+
+	Consiste em utilizar uma máquina para executar o procedimento desejado de forma automática ou semiautomática.
+
+- Computador
+
+	Um computador é composto por:
+
+	Hardware - parte física (as peças)
+	Software - parte lógica (os programas)
+
+- Programa de computador
+
+	Programas de computador são algoritmos executados pelo computador.
+
+	O computador é uma máquina que automatiza a execução de algoritmos.
+
+	Porém funciona apenas para algoritmos computacionais como processamento de dados e cálculos.
+
+- O que é preciso para se fazer um programa de computador
+
+	Vamos precisar de:
+
+	Uma linguagem de programação
+	Uma IDE (Integrated Development Environment ou Ambiente de Desenvolvimento Integrado)
+	Um compilador
+	Um gerador de código ou máquina virtual
+
+- Linguagem de programação
+
+
+	É um conjunto de regras léxicas (ortografia) e sintáticas (gramática) para se escrever programas.
+
+	Léxica diz respeito à correção das palavras "isoladas" (ortografia).
+
+	Sintática diz respeito à correção das sentenças (gramática).
+
+	Exemplos de linguagens de programação: C, Pascal, C++, Java, C#, Python, Ruby, PHP, JavaScript, etc.
+
+- IDE
+
+	IDE significa "Integrated Development Environment" ou traduzindo "Ambiente de Desenvolvimento Integrado".
+
+	É um conjunto de softwares utilizado para a construção de programas, exemplos:
+
+	C/C++ - Code Blocks
+	Java -  Eclipse, NetBeans
+	C# - Microsoft Visual Studio
+
+	Funcionalidades de uma IDE:
+
+	Edição de código fonte (endentação, autocompletar, destaque de palavras, etc.)
+	Depuração e testes
+	Construção do produto final
+	Sugestão de modelos
+	Auxiliar em várias tarefas do seu projeto
+
+- Código fonte
+
+	É aquele escrito pelo programador em linguagem de programação na construção dos programas.
+
+- Modos de construção de programas
+
+	Compilação
+	Interpretação
+	Abordagem híbrida
+
+- Compilação
+
+	cria o código fonte > passa pelo compilador (análise léxica e análise sintática) > que cria o código objeto > passa pelo gerador de código > que cria o código executavel específico > que é executado pelo S.O.
+
+	Exemplos de linguagem: C, C++
+
+- Interpretação
+
+	cria o código fonte > passa pelo interpretador (que faz a geração de código sob demanda) > que é executado pelo S.O.
+
+	Exemplos de linguagem: PHP, JavaScript
+
+- Abordagem híbrida
+
+	cria o código fonte > passa pelo pré-compilador (análise léxica e análise sintática) > que cria o código Bytecode > passa pela máquina virtual (que faz a geração de código sob demanda) > que é executado pelo S.O.
+
+	Exemplos de linguagem: Java, C#
+
+- Vantagens e desvantagens dos modos de construção de programas
+
+	Compilação
+
+	Vantagens: alta velocidade de execução do programa, auxilio do compilador na checagem do programa
+	Desvantagens: necessidade de compilar para cada S.O., precisa ser recompilado caso seja alterado
+
+	Interpretação
+
+	Vantagens: não precisa compilar para cada S.O.
+	Desvantagens: baixa velocidade de execução do programa, não temos auxilio do compilador na checagem do programa
+
+	Abordagem híbrida
+
+	Vantagens: não precisa compilar para cada S.O., auxilio do compilador na checagem do programa
+	Desvantagens: média velocidade de execução do programa, precisa ser recompilado caso seja alterado
