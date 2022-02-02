@@ -104,3 +104,23 @@
 
 	Vantagens: não precisa compilar para cada S.O., auxilio do compilador na checagem do programa
 	Desvantagens: média velocidade de execução do programa, precisa ser recompilado caso seja alterado
+
+- Java
+
+	É uma linguagem de programação, plataforma de desenvolvimento e execução de programas.
+
+	Criada pela Sun Microsystems no meio da década de 1990 e adquirida pela Oracle Corporation em 2010.
+
+	Desenhada para ser utilizada em todos os tipos de dispositivos, principalmente portáteis.
+
+	É uma linguagem orientada a objetos, segura, robusta e que domina o mercado a muitos anos.
+
+	Resolve problemas de linguagens antigas como ponteiros / gerenciamento de memória, portabilidade, utilização em dispositivos diversos e custo.
+
+- Versões do Java
+
+	LTS ("Long Term Support" ou "suporte de longo prazo") - são versões com maior tempo de updates, correções e suporte tecnico por parte do fabricante. Elas são lançadas com menor frequencia.
+
+	Non-LTS - são versões com menor tempo de updates, correções e suporte tecnico por parte do fabricante. Elas são lançadas com menor frequencia, normalemnte a cada ano.
+
+- 
