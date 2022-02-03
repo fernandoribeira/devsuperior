@@ -123,4 +123,30 @@
 
 	Non-LTS - são versões com menor tempo de updates, correções e suporte tecnico por parte do fabricante. Elas são lançadas com menor frequencia, normalemnte a cada ano.
 
-- 
+- Java Virtual Machine (JVM)
+
+	Máquina virtual do Java, necessário para executar programas Java.
+
+	Disponibilizadas para diversos sistemas operacionais, desta forma voce pode compilar o programa Java uma vez somente e rodar em qualquer sistema operacional utilizando a JVM.
+
+- Estrutura de uma aplicação Java
+
+	Uma aplicação Java é composta por classes.
+
+	O agrupamento lógico de classes relacionadas se chama "package".
+
+	O agrupamento lógico de "package's" relacionadas se chama "module".
+
+	O agrupamento lógico de "module's" relacionadas se chama "application".
+
+- Dicas Eclipse
+
+	Mudar o layout: menu superior "Window" > "Perspective" > "Open Perspective" > escolher a perspectiva desejada
+
+	Zerar o layout: menu superior "Window" > "Perspective" > "Reset Perspective"
+
+	Mostrar a aba Console: menu superior "Window" > "Show View" > "Console"
+
+	Mudar o tamanho da fonte: tecla "CTRL +" para aumentar e "CTRL -" para diminuir
+
+	
