@@ -149,4 +149,16 @@
 
 	Mudar o tamanho da fonte: tecla "CTRL +" para aumentar e "CTRL -" para diminuir
 
-	
+- Operadores aritméticos
+
+	+	adição
+	-	subtração
+	*	multiplicação
+	/	divisão
+	%	resto da divisão
+
+	Precedência dos operadores:
+
+	* / %
+	+ -
+
