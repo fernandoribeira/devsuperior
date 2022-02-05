@@ -155,22 +155,19 @@
 
 	Mudar o tamanho da fonte: tecla "CTRL +" para aumentar e "CTRL -" para diminuir
 
-- Operadores aritméticos
+	Importar classes: "CTRL SHIFT O"
+	
+	Autoendentação: "CTRL SHIFT F"
 
-	+	adição
-	-	subtração
-	*	multiplicação
-	/	divisão
-	%	resto da divisão
+	Atalhos:
 
-	Precedência dos operadores
+	método "main" - main e depois "CTRL Espaço"
 
-	* / %
-	+ -
+	"System.out.println();" - sysout e depois "CTRL Espaço"
 
-	Agrupamento de expressões
+- Classe principal (Main)
 
-	Utilizamos parênteses ( ) para agrupamento de expressões aritméticas.
+	É a classe "entry-point" da aplicação, a primeira a ser iniciada ao executar um programa em Java.
 
 - Variáveis
 
@@ -212,4 +209,120 @@
 	Com quebra de linha:
 
 	System.out.println(<texto ou variável a ser exibido na tela>);
+
+	Com formatação:
+
+	System.out.printf(<marcadores>, <variáveis>);
+
+	Marcadores:
+
+	Especificador 	Formato
+	%s 				String
+	%d 				Tipos inteiros
+	%f 				Tipos de ponto flutuante
+	%b 				Booleanos
+	%c 				Caracteres
+	%n 				Quebra de linha
+
+	Controle de casas decimais:
+
+	Utilizar "%.<quantidade de casas desejadas>f"
+
+- Concatenação de texto
+
+	Para "print" e "println" utilizar o sinal de "+" para concatenação do texto.
+
+	Para "printf" não existe concatenação de texto pois a estrutura é diferente, a frase ja é formatada antes.
+
+- Separador decimal
+
+	Por padrão "print" e "println" utilizam o sistema americano que determina o "." como separador decimal.
+
+	Por padrão "printf" utiliza a localização do sistema operacional para determinar o separador decimal, no caso do Brasil a ",".
+
+	Caso queria alterar para o sistema americano de separador decimal com "." precisamos importar a classe "Locale" no início do programa:
+
+	import java.util.Locale;
+
+	E em seguida, dentro do método, declarar a configuração:
+
+	Locale.setDefault(Locale.US);
+
+- Operadores aritméticos
+
+	+	adição
+	-	subtração
+	*	multiplicação
+	/	divisão
+	%	resto da divisão
+
+	Precedência dos operadores
+
+	* / %
+	+ -
+
+	Agrupamento de expressões
+
+	Utilizamos parênteses ( ) para agrupamento de expressões aritméticas.
+
+- Casting
+
+	Conversão entre tipos de variáveis, temos dois tipos, implicita (automatica) e explicita (forçada).
+
+	É necessário quando o compilador não é capaz de "adivinhar" que o resultado de uma expressão deve ser de outro tipo.
+
+	Uso:
+
+	A conversão implcita (automatica) não precisa de intervenção alguma.
+
+	A conversão explicita (forçada) é feita colocando o tipo desejado em frente ao valor a ser convertido "(<tipo desejado>) <valor a ser convertido>".
+
+	Tabela de conversão implicita e explicita:
+
+	De / Para	byte 	  short 	 	char 	 	int 	 		long 	 		float 	 		double
+
+	byte 		N/A 	  implicito 	char 		implicito		implicito		implicito		implicito
+	short 		byte 	  N/A 			char 		implicito		implicito		implicito		implicito
+	char 		byte 	  short		 	N/A 		implicito		implicito		implicito		implicito
+	int 		byte 	  short		 	char 		N/A 			implicito		implicito		implicito
+	long 		byte 	  short		 	char 		int 			N/A 			implicito		implicito
+	float 		byte 	  short		 	char 		int 			long 			N/A 			implicito
+	double 		byte 	  short		 	char 		int 			long 			float 			N/A
+
+	O tipo de dado boolean é o único tipo primitivo que não suporta casting.
+
+- Entrada de dados
+
+	Importar a classe "Scanner" no inicio do programa:
+
+	import java.util.Scanner;
+
+	Declarar um objeto Scanner padrão:
+
+	Scanner sc = new Scanner(System.in);
+
+	Para entrada de dados utilziamos os métodos especificos para cada tipo:
+
+	sc.next(); 						Entrada de valor texto sem espaço
+	sc.nextLine(); 					Entrada de valor texto de diversas palavras (com espaço)
+	sc.next().charAt(0); 			Entrada de valor char
+	sc.nextLong(); 					Entrada de valor long
+	sc.nextInt(); 					Entrada de valor int
+	sc.nextByte(); 					Entrada de valor byte
+	sc.nextShort(); 				Entrada de valor short
+	sc.nextDouble(); 				Entrada de valor double
+	sc.nextFloat(); 				Entrada de valor float
+	sc.nextBoolean(); 				Entrada de valor boolean
+
+	Ao término do uso do objeto Scanner o mesmo deve ser fechado:
+
+	sc.close();
+
+	Atenção!
+
+	Quando você usa um comando de leitura diferente do "nextLine()" e dá alguma quebra de linha, essa quebra de linha fica "pendente" na entrada padrão.
+	
+	Se você então fizer um "nextLine()", aquela quebra de linha pendente será absorvida pelo "nextLine()" e o programa apresentara erro ou algum comportamento estranho.
+
+	Solução: Faça um "nextLine()" extra antes de fazer o "nextLine()" de seu interesse.
 
