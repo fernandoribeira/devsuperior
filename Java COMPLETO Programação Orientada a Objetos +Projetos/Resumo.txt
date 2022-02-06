@@ -326,3 +326,15 @@
 
 	Solução: Faça um "nextLine()" extra antes de fazer o "nextLine()" de seu interesse.
 
+- Funções matemáticas
+
+	Existem algumas fucções já pré-definidas em Java, elas fazem parte da classe "Math", seguem exemplos:
+
+	Exemplo 								Significado
+
+	Math.sqrt(<valor x>); 					resultado da raiz quadrada de x
+	Math.pow(<valor x>, <valor y>); 		resultado de x elevado a y
+	Math.abs(<valor x>); 					resultado da valor absoluto de x
+
+	Existem diversas outras funções já prontas, basta verificar a documentação da classe "java.lan.Math".
+
