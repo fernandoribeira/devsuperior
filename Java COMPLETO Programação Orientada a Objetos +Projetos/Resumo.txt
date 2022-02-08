@@ -338,3 +338,14 @@
 
 	Existem diversas outras funções já prontas, basta verificar a documentação da classe "java.lan.Math".
 
+- Operadores comparativos
+
+	Operador 		Significado
+	
+	>  				maior
+	<  				menor
+	>= 				maior ou igual
+	<= 				menor ou igual
+	== 				igual
+	!= 				diferente
+
