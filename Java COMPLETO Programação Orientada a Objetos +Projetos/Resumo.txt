@@ -349,3 +349,41 @@
 	== 				igual
 	!= 				diferente
 
+- Operadores lógicos
+
+	Operador 		Significado
+
+	&& 				E
+	|| 				OU
+	! 				NÃO
+
+- Estruturas de seleção
+
+	Simples (if)
+
+	if (<condição>) {
+		<comandos a serem executados caso a condição acima seja verdadeira>
+	}
+
+	Composta (if...else)
+
+	if (<condição>) {
+		<comandos a serem executados caso a condição acima seja verdadeira>
+	} else {
+		<comandos a serem executados caso a condição acima seja falsa>
+	}
+
+	Aninhada (if...else if...else)
+
+	if (<condição>) {
+		<comandos a serem executados caso a condição acima seja verdadeira>
+	} else if (<condição>) {
+		<comandos a serem executados caso a condição cima seja verdadeira>
+	} else if (<condição>) {
+		<comandos a serem executados caso a condição cima seja verdadeira>
+	}
+	...
+	} else {
+		<comandos a serem executados caso todas as condições acima sejam falsas>
+	}
+
