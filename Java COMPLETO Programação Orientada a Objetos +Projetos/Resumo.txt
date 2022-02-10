@@ -387,3 +387,19 @@
 		<comandos a serem executados caso todas as condições acima sejam falsas>
 	}
 
+	Seleção específica (switch)
+
+	
+
+- Operadores de atribuição acumulativa
+
+	Usados como forma abreviada de escrever que uma variável recebe o valor dela em uma operação onde ela esta envolvida.
+
+	Operador 		Exemplo de uso
+
+	+= 				a = a + b;
+	-= 				a = a - b;
+	*= 				a = a * b;
+	/= 				a = a / b;
+	%= 				a = a % b;
+
