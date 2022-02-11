@@ -389,7 +389,21 @@
 
 	Seleção específica (switch)
 
-	
+	switch (<variavel>) {
+		case <valor>:
+			<ações a executar caso o valor seja igual a variável>;
+			break;
+		case <valor>:
+			<ações a executar caso o valor seja igual a variável>;
+			break;
+		...
+		default:
+			<ações a executar caso nenhuma alternativa anterior seja válida>;
+	}
+
+	Condicional ternária
+
+	(<condição>) ? <valor se verdadeiro> : <valor se falso>;
 
 - Operadores de atribuição acumulativa
 
