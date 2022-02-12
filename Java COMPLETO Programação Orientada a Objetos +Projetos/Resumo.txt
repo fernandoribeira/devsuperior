@@ -179,6 +179,19 @@
 
 	Para interromper o debug: pressionar as teclas "CTRL F2"
 
+- Convenções de nomes
+
+	Lower Camel Case ("lastName" por exemplo):
+
+	pacotes
+	atributos
+	métodos
+	variáveis e parâmetros
+
+	Pascal Case ("UserAccount" por exemplo):
+
+	classes
+
 - Classe principal (Main)
 
 	É a classe "entry-point" da aplicação, a primeira a ser iniciada ao executar um programa em Java.
@@ -200,6 +213,7 @@
 	Não pode começar com dígito
 	Não pode ter espaço em branco
 	Não usar acentos
+	Use nomes que tenham significado / relação com o que a variável representa
 	Use o padrão "CamelCase", e, específico o "lowerCamelCase" (de letra inicial minúscula)
 
 	Tipos primitivos em Java
@@ -385,63 +399,77 @@
 
 - Estruturas de seleção
 
-	Simples (if)
+	if (simples)
 
-	if (<condição>) {
-		<comandos a serem executados caso a condição acima seja verdadeira>
-	}
+		if (<condição>) {
+			<comandos a serem executados caso a condição acima seja verdadeira>
+		}
 
-	Composta (if...else)
+	if...else (composta)
 
-	if (<condição>) {
-		<comandos a serem executados caso a condição acima seja verdadeira>
-	} else {
-		<comandos a serem executados caso a condição acima seja falsa>
-	}
+		if (<condição>) {
+			<comandos a serem executados caso a condição acima seja verdadeira>
+		} else {
+			<comandos a serem executados caso a condição acima seja falsa>
+		}
 
-	Aninhada (if...else if...else)
+	if...else if...else (aninhada)
 
-	if (<condição>) {
-		<comandos a serem executados caso a condição acima seja verdadeira>
-	} else if (<condição>) {
-		<comandos a serem executados caso a condição cima seja verdadeira>
-	} else if (<condição>) {
-		<comandos a serem executados caso a condição cima seja verdadeira>
-	}
-	...
-	} else {
-		<comandos a serem executados caso todas as condições acima sejam falsas>
-	}
-
-	Seleção específica (switch)
-
-	switch (<variavel>) {
-		case <valor>:
-			<ações a executar caso o valor seja igual a variável>;
-			break;
-		case <valor>:
-			<ações a executar caso o valor seja igual a variável>;
-			break;
+		if (<condição>) {
+			<comandos a serem executados caso a condição acima seja verdadeira>
+		} else if (<condição>) {
+			<comandos a serem executados caso a condição cima seja verdadeira>
+		} else if (<condição>) {
+			<comandos a serem executados caso a condição cima seja verdadeira>
+		}
 		...
-		default:
-			<ações a executar caso nenhuma alternativa anterior seja válida>;
-	}
+		} else {
+			<comandos a serem executados caso todas as condições acima sejam falsas>
+		}
 
-	Condicional ternária
+	switch (seleção específica)
+
+		switch (<variavel>) {
+			case <valor>:
+				<ações a executar caso o valor seja igual a variável>;
+				break;
+			case <valor>:
+				<ações a executar caso o valor seja igual a variável>;
+				break;
+			...
+			default:
+				<ações a executar caso nenhuma alternativa anterior seja válida>;
+		}
+
+	operador ternário ? (seleção dupla)
 
 	(<condição>) ? <valor se verdadeiro> : <valor se falso>;
 
 - Estruturas de repetição
 
-	Quando não se sabe quantas vezes vai repetir (while)
+	while (usada quando não se sabe quantas vezes vai repetir, teste no inicio, pode nunca ser executada)
 
-	<declaração da variavel de controle>;
+		<declaração da variavel de controle>;
 
-	while (<teste da variável de controle> ) {
-		<código  a ser executado caso a condição seja satisfeita>
-		...
-		<alteração do valor da variável de controle se necessário>
-	}
+		while (<teste da variável de controle>) {
+			<código  a ser executado caso a condição seja satisfeita>
+			...
+			<alteração do valor da variável de controle se necessário>
+		}
 
-	
+	for (usada quando se sabe a quantidade de vezes a ser executada, sempre é executada)
+
+		for (<declaração da variável de controle>; <teste da variavel de controle>; <incremento ou decremento da variavel de controle>) {
+			<código a ser executado quando a repetição for executada>
+		}
+
+	do while (usada quando não se sabe quantas vezes vai repetir, teste no final, é executada ao menos uma vez)
+
+		<declaração da variavel de controle>;
+
+		do {
+			<código  a ser executado caso a condição seja satisfeita>
+			...
+			<alteração do valor da variável de controle se necessário>
+		} while (<teste da variável de controle>);
 
