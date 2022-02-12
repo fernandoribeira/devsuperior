@@ -159,11 +159,25 @@
 	
 	Autoendentação: "CTRL SHIFT F"
 
+	Inciar o programa: "CTRL F11"
+
 	Atalhos:
 
 	método "main" - main e depois "CTRL Espaço"
 
 	"System.out.println();" - sysout e depois "CTRL Espaço"
+
+- Debug Eclise
+
+	Para marcar uma linha de breakpoint: clicar duas vezes do lado esquerdo do número da linha (irá marcar uma bolinha)
+
+	Para desmarcar uma linha de breakpoint: clicar duas vezes do lado esquerdo na bolinha ao lado do número da linha (irá desmarcar a bolinha)
+
+	Para iniciar o debug: pressionar a tecla "F11"
+
+	Para executar uma linha: pressionar a tecla "F6"
+
+	Para interromper o debug: pressionar as teclas "CTRL F2"
 
 - Classe principal (Main)
 
@@ -264,6 +278,18 @@
 	Agrupamento de expressões
 
 	Utilizamos parênteses ( ) para agrupamento de expressões aritméticas.
+
+- Operadores de atribuição acumulativa
+
+	Usados como forma abreviada de escrever que uma variável recebe o valor dela em uma operação onde ela esta envolvida.
+
+	Operador 		Exemplo de uso
+
+	+= 				a = a + b;
+	-= 				a = a - b;
+	*= 				a = a * b;
+	/= 				a = a / b;
+	%= 				a = a % b;
 
 - Casting
 
@@ -405,15 +431,17 @@
 
 	(<condição>) ? <valor se verdadeiro> : <valor se falso>;
 
-- Operadores de atribuição acumulativa
+- Estruturas de repetição
 
-	Usados como forma abreviada de escrever que uma variável recebe o valor dela em uma operação onde ela esta envolvida.
+	Quando não se sabe quantas vezes vai repetir (while)
 
-	Operador 		Exemplo de uso
+	<declaração da variavel de controle>;
 
-	+= 				a = a + b;
-	-= 				a = a - b;
-	*= 				a = a * b;
-	/= 				a = a / b;
-	%= 				a = a % b;
+	while (<teste da variável de controle> ) {
+		<código  a ser executado caso a condição seja satisfeita>
+		...
+		<alteração do valor da variável de controle se necessário>
+	}
+
+	
 
