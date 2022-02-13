@@ -473,3 +473,70 @@
 			<alteração do valor da variável de controle se necessário>
 		} while (<teste da variável de controle>);
 
+- Operadores bitwise (bit a bit)
+
+	Operador 			Significado
+
+	& 					Operação "E" bit a bit
+	| 					Operação "OU" bit a bit
+	^ 					Operação "OU-exclusivo" bit a bit
+
+- Funções para String
+
+	toLowerCase() - passa a String para lowercase
+	toUpperCase() - passa a String para uppercase
+	trim() - corta os espaços no começo e no final da String
+	substring(<posição inicial>) - cria uma nova String a partir de uma posição ate o final da String
+	substring(<posição inicial>, <posição final>) - cria uma nova String a partir de uma posição ate uma posição final
+	replace(<char>, <char>) - troca um char da String
+	replace(<string>, <string>) - troca uma parte da String
+	indexOf(<string>) - retorna a primeira posição onde a String foi encontrada
+	lastIndexOf(<string>) - retorna a última posição onde a String foi encontrada
+	split(<separador>) - cria um vetor com as substrings criadas pelo separador
+
+- Comentários
+
+	// Comentario de uma linha
+
+	/*
+	*
+	* Comentário de bloco
+	*
+	*/
+
+- Métodos
+
+	Representam um processamento que possui um significado.
+
+	As principais vantagens: modularização, delegação e reaproveitamento de código.
+
+	Dados de entrada e saída:
+
+	Funções podem receber dados de entrada (parâmetros)
+	Funções podem ou não retornar uma saída
+
+	Estrutura:
+
+	<modificador de acesso> <propriedade de instanciação se necessário> <tipo de retorno> <nome do método>(<ipo do parâmetro> <nome do parâmetro>, ...)
+		<código do método>
+		<retorno do método caso exista>
+	}
+
+	Exemplo:
+
+	public static int max(int x, int y, int z) {
+
+		int maxNumber;
+
+		if (x > y && x > z) {
+			maxNumber = x;
+		} else if (y > x && y > z) {
+			maxNumber = y;
+		} else {
+			maxNumber = z;
+		}
+
+		return maxNumber;
+	}
+
+	
