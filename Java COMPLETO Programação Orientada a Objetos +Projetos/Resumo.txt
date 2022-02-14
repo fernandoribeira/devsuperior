@@ -499,9 +499,9 @@
 	// Comentario de uma linha
 
 	/*
-	*
-	* Comentário de bloco
-	*
+	* Comentário 
+	* de
+	* bloco
 	*/
 
 - Métodos
