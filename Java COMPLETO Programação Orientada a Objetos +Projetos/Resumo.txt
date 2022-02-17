@@ -504,6 +504,161 @@
 	* bloco
 	*/
 
+- Classes
+
+	É um tipo estruturado que pode conter:
+
+	Atributos
+	Métodos
+
+	A classe também pode prover muitos outros recursos, tais como:
+
+	Construtores
+	Sobrecarga
+	Encapsulamento
+	Herança
+	Polimorfismo
+
+	Exemplos de classes:
+
+	Entidades: Produto, Cliente, Triangulo
+	Serviços: ProdutoService, ClienteService, EmailService, StorageService
+	Controladores: ProdutoController, ClienteController
+	Utilitários: Calculadora, Compactador
+	Outros (views, repositórios, gerenciadores, etc.)
+
+- Estrutura básica de uma classe
+
+	<pacote que a classe faz parte>;
+
+	<importação de pacotes necessários>;
+
+	<declaração da classe> {
+		
+		<declaração de atributos>...
+
+		<declaração de métodos>...
+
+	}
+
+	Exemplo:
+
+	package entities;
+
+	public class Triangle {
+
+		public double a;
+		public double b;
+		public double c;
+		
+		public double area() {
+			
+			double p = (a + b + c) / 2.0;
+			double r = Math.sqrt(p * (p - a) * (p - b) * (p - c));
+			
+			return r;
+		}
+		
+	}
+
+
+- Pacotes (package)
+
+	Um pacote ou "package" na tecnologia Java nada mais é do que um conjunto de classes localizadas na mesma estrutura hierárquica de diretórios.
+
+	Usualmente, são colocadas em um package classes relacionadas, construídas com um propósito comum para promover a reutilização de código.
+
+	Deve ser declarado a primeira linha da classe.
+
+	Exemplo:
+
+	package <nome do pacote>;
+
+	package entities;
+
+- Modificadores de acesso
+
+	Temos quatro modificadores de acesso básicos da linguagem Java: public, private, protected e default.
+
+	Eles servem para tornar componentes da sua aplicação mais ou menos acessíveis por outras partes do seu programa.
+
+	Detalhes dos modificadores:
+
+	"public"
+
+	Não impõe restrições de acesso ao item, deixando-o visível para todo e qualquer classe. Esse modificador pode ser aplicado sobre todos os itens:
+
+	    Classes
+	    Classes internas
+	    Interfaces
+	    Interfaces internas
+	    Annotations
+	    Annotations internas
+	    Enum
+	    Enums internos
+	    Métodos
+	    Atributos
+
+	"private"
+
+	O modificador que mais restringe a visibilidade do item marcado deixando-o visível somente para a classe que o definiu. Em uma herança a restrição de acesso atinge também as classes filhas, impedindo-as de acessarem o item sob o modificador private. Esse modificador pode ser aplicado sobre os seguintes itens:
+
+	    Classes internas
+	    Interfaces internas
+	    Annotations internas
+	    Enums internos
+	    Métodos
+	    Atributos
+
+	"protected"
+
+	Restringe o acesso ao item sob o modificador deixando-o visível somente para as classes filhas da classe que possui o item e para classes que se encontram sob o mesmo pacote da classe que possui o item. Esse modificador pode ser aplicado sobre os itens:
+
+	    Classes internas
+	    Interfaces internas
+	    Annotations internas
+	    Enums internos
+	    Métodos
+	    Atributos
+
+	"default":
+
+	Restringe o acesso ao item sob o modificador deixando-o visível somente para as classes que se encontram sob o mesmo pacote da classe que possui o item. Em uma herança a restrição de acesso atinge também as classes filhas que não estejam no mesmo pacote, impedindo-as de acessarem o item sob o modificador default.
+
+	Para esse modificador não há uma palavra chave definida para o uso aqui. O modificador aqui é a omissão dos outros modificadores. Esse modificador pode ser aplicado sobre os seguintes itens:
+
+	    Classes
+	    Classes internas
+	    Interfaces internas
+	    Annotations  internas
+	    Enums internos
+	    Métodos
+	    Atributos
+
+    Visibilidade de um item com o modificador de acesso
+
+	Para testar a visibilidade de um item com o seu modificador de acesso há cinco cenários diferentes:
+
+    A partir da mesma classe
+    Qualquer classe no mesmo package
+    Qualquer classe filha no mesmo package
+    Qualquer classe filha em package diferente
+    Qualquer classe em package diferente
+
+    Para isso utilizamos a tabela abaixo:
+
+	Visibilidade 									public 		protected 		default 	private
+
+    A partir da mesma classe 						OK			OK 				OK 			OK
+    Qualquer classe no mesmo package 				OK			OK 				OK 			Não
+    Qualquer classe filha no mesmo package 			OK			OK 				OK 			Não
+    Qualquer classe filha em package diferente 		OK			OK 				Não 		Não
+    Qualquer classe em package diferente 			OK			Não 			Não 		Não
+
+- Atributos
+
+
+
 - Métodos
 
 	Representam um processamento que possui um significado.
@@ -539,7 +694,10 @@
 		return maxNumber;
 	}
 
-- Pacotes (package)
+- Instanciação de uma classe
 
-- Classes
+
+
+
+- Diagrama UML
 
