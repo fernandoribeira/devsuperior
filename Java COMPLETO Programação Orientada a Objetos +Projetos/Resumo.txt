@@ -107,9 +107,11 @@
 
 - Três operações básicas de programação
 
-	Entrada de dados
-	Processamento de dados
-	Saída de dados
+	Entrada de dados: normalmemnte feita pelo teclado ou mouse
+
+	Processamento de dados: feita pelo processador
+
+	Saída de dados: normalmente feito pelo monitor
 
 - Java
 
@@ -129,21 +131,23 @@
 
 	Non-LTS - são versões com menor tempo de updates, correções e suporte tecnico por parte do fabricante. Elas são lançadas com menor frequencia, normalemnte a cada ano.
 
-- Java Virtual Machine (JVM)
+- Edições do Java
 
-	Máquina virtual do Java, necessário para executar programas Java.
+    Java SE (Java Standard Edition): para programação desktop
 
-	Disponibilizadas para diversos sistemas operacionais, desta forma voce pode compilar o programa Java uma vez somente e rodar em qualquer sistema operacional utilizando a JVM.
+    Java EE (Java Enterprise Edition): para programação web
 
-- Estrutura de uma aplicação Java
+    Java ME (Java Micro Edition): para programação de dispositivos embarcados
 
-	Uma aplicação Java é composta por classes.
+    JavaFX: para programação de multimidia
 
-	O agrupamento lógico de classes relacionadas se chama "package".
+- Kits Java
 
-	O agrupamento lógico de "package's" relacionadas se chama "module".
+	Java Runtime Environment (JRE): programa a ser instalado para execução de programas Java, possui a máquina virtual Java (JVM).
 
-	O agrupamento lógico de "module's" relacionadas se chama "application".
+	Java Development Kit (JDK): programa a ser instalado para desenvolvimento e execução de programas Java (JVM), possui a máquina virtual Java, as APIs (bibliotecas) de desenvolvimento e o compilador Java.
+
+	Estes kits são disponibilizados para diversos sistemas operacionais, permitindo assim a criação e execução de aplicativos Java nestes ambientes.
 
 - Dicas Eclipse
 
@@ -179,7 +183,17 @@
 
 	Para interromper o debug: pressionar as teclas "CTRL F2"
 
-- Convenções de nomes
+- Estrutura de uma aplicação Java
+
+	Uma aplicação Java basicamente é composta por classes.
+
+	O agrupamento lógico de classes relacionadas se chama "package".
+
+	O agrupamento lógico de "package's" relacionadas se chama "module".
+
+	O agrupamento lógico de "module's" relacionadas se chama "application".
+
+- Convenções de nomes em Java
 
 	Lower Camel Case ("lastName" por exemplo):
 
@@ -192,9 +206,19 @@
 
 	classes
 
-- Classe principal (Main)
+- Comentários
 
-	É a classe "entry-point" da aplicação, a primeira a ser iniciada ao executar um programa em Java.
+	Comentários em programas Java são códigos dentro dos programas que não serão executados mas server para dar informações relativas ao código.
+
+	Exemplo:
+
+	// Comentario de uma linha
+
+	/*
+	* Comentário 
+	* de
+	* bloco
+	*/
 
 - Variáveis
 
@@ -214,11 +238,14 @@
 	Não pode ter espaço em branco
 	Não usar acentos
 	Use nomes que tenham significado / relação com o que a variável representa
-	Use o padrão "CamelCase", e, específico o "lowerCamelCase" (de letra inicial minúscula)
+	Use o padrão "CamelCase", em específico o "lowerCamelCase" (de letra inicial minúscula)
 
-	Tipos primitivos em Java
+- Tipos primitivos em Java
+
+	São variáveis básicas da linguagem Java, elas guardam o valor dentro delas mesmo.
 
 	Descrição 								Tipo 		Tamanho 	Valores 										Valor padrão
+
 	tipos numéricos inteiros				byte 		8 bits 		-128 a 127 										0
 	tipos numéricos inteiros				short 		16 bits 	-32768 a 32767 									0
 	tipos numéricos inteiros				int 		32 bits 	-2147483648 a 2147483647 						0
@@ -245,6 +272,7 @@
 	Marcadores:
 
 	Especificador 	Formato
+
 	%s 				String
 	%d 				Tipos inteiros
 	%f 				Tipos de ponto flutuante
@@ -252,7 +280,7 @@
 	%c 				Caracteres
 	%n 				Quebra de linha
 
-	Controle de casas decimais:
+	Controle de casas decimais para tipo de ponto flutuante:
 
 	Utilizar "%.<quantidade de casas desejadas>f"
 
@@ -494,16 +522,6 @@
 	lastIndexOf(<string>) - retorna a última posição onde a String foi encontrada
 	split(<separador>) - cria um vetor com as substrings criadas pelo separador
 
-- Comentários
-
-	// Comentario de uma linha
-
-	/*
-	* Comentário 
-	* de
-	* bloco
-	*/
-
 - Classes
 
 	É um tipo estruturado que pode conter:
@@ -527,6 +545,18 @@
 	Utilitários: Calculadora, Compactador
 	Outros (views, repositórios, gerenciadores, etc.)
 
+	Caracterisiticas:
+
+	Toda classe possui um nome
+	Possue visibilidade (exemplo: public, private, protected ou default)
+	Podem possuir membros (exemplo: atributos, métodos)
+
+- Classe principal (Program)
+
+	É a classe "entry-point" da aplicação, a primeira a ser iniciada ao executar um programa em Java.
+
+	Para isso ela possui o método "main".
+
 - Estrutura básica de uma classe
 
 	<pacote que a classe faz parte>;
@@ -545,6 +575,8 @@
 
 	package entities;
 
+	import java.util.Locale;
+
 	public class Triangle {
 
 		public double a;
@@ -561,7 +593,6 @@
 		
 	}
 
-
 - Pacotes (package)
 
 	Um pacote ou "package" na tecnologia Java nada mais é do que um conjunto de classes localizadas na mesma estrutura hierárquica de diretórios.
@@ -575,6 +606,16 @@
 	package <nome do pacote>;
 
 	package entities;
+
+- Declaração import
+
+	A instrução "import" da linguagem Java tem como objetivo disponibilizar em uma classe, de um determinado pacote, o acesso a demais classes que estejam em pacotes diferentes.
+
+	Para isso basta inserir a dealcração "import" após a declaração "package" da classe, exemplo:
+
+	import <caminho fqdn da classe>;
+
+	import java.util.Locale;
 
 - Modificadores de acesso
 
@@ -657,7 +698,13 @@
 
 - Atributos
 
+	Os atributos são as propriedades de uma classe, também são conhecidos como variáveis ou campos. Essas propriedades definem o estado de um objeto, fazendo com que esses valores possam sofrer alterações.
 
+	Eles são declarados como variaveis comuns porpém dentro da classe.
+
+	Exemplo:
+
+	int idade;
 
 - Métodos
 
@@ -694,10 +741,92 @@
 		return maxNumber;
 	}
 
-- Instanciação de uma classe
+- Método "main"
 
+	É o primeiro método executado em um programa Java, considerado como o "entry-point" da aplicação.
 
+	Normalmente ele está na classe "Program".
 
+	Ele deve ser declarado sempre da mesma forma:
+
+	public static void main(String[] args) {
+		<código do método>
+	}
+
+- Objeto
+
+	Uma classe é como se fosse uma planta de uma casa, um  desenho, um projeto de algo. Não podemos utilizar uma planta de uma casa para morar, precisamos contruir a casa.
+
+	Desta forma um objeto é como se fosse a casa construida a partir da planta.
+
+	A classe tem a descrição do que o objeto possui e faz, mas é somente um projeto, para utilizarmos a classe criamos onjetos baseados nela.
+
+- Declaração e instanciação de um objeto
+
+	Para criarmos um objeto temos dois passos, a declaração e a instanciação.
+
+	A declaração de um objeto é feito igual a uma variavel comum.
+
+	Exemplo:
+
+	<nome da classe> <nome do objeto>;
+
+	Triangulo t;
+
+	Ela cria na memória uma variável com conteúdo vazio.
+
+	Instanciar é o ato de criar o objeto na memória e inserir seu endereço dentro da variavel criada anteriormente.
+
+	Exemplo:
+
+	<nome do objeto> = new <nome da classe>(<paramentros se necessario):
+
+	t = new Triangulo(2.00, 3.00, 5.00);
+
+	Uma variavel do tipo comum (primitiva) guarda dentro dela o valor propriamente dito, ja uma variavel do tipo objeto guarda um valor de enderço de memoria que redireciona a variavel (como um link ou ponteiro) ao local onde os dados efetivamente estao.
+
+- Linguagem UML
+
+	A Linguagem de Modelagem Unificada (UML) foi criada para estabelecer uma linguagem de modelagem visual comum, semanticamente e sintaticamente rica, para arquitetura, design e implementação de sistemas de software complexos, tanto estruturalmente quanto para comportamentos.
+
+	A UML não é uma linguagem de programação, ela mostra as classes (com seus atributos e métodos) e seus relacionamentos com outras classes, tudo em forma de desenho.
+
+	Podemos dizer que a UML mostra o projeto da classe ou diagrama de classes.
 
 - Diagrama UML
+
+	-------------------------
+	| <nome da classe>      |
+	-------------------------
+	| <atributos da classe> |
+	-------------------------
+	| <métodos da classe>   |
+	-------------------------
+
+	Exemplo:
+
+	---------------------
+	|      Triangle     |
+	---------------------
+	| - A: double       |
+	| - B: double       |
+	| - C: double       |
+	---------------------
+	| + area(): double  |
+	---------------------
+
+	Detalhes:
+
+	O nome da classe é escrito em negrito.
+
+	Temos modificadores de acesso igual ao Java:
+
+	"-" para private
+	"#" para protected
+	"+" para public
+	"~" para default
+
+	Os atributos são escritos na seguinte estrutura: "<modificador de acesso> <nome da variavel>: <tipo da variavel>"
+
+	Os métodos são escritos na seguinte estrutura: "<modificador de acesso> <nome do método>(<nome do parametro>: <tipo do parametro>): <tipo da variavel de retorno>"
 
