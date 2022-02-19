@@ -706,6 +706,16 @@
 
 	int idade;
 
+- Referência "this"
+
+	Caso algum atributo tenha o mesmo nome de um parâmetro de método podemos referenciar o atributo do objeto com a palavra "this" antes do atributo ao utilizar o mesmo.
+
+	Exemplo:
+
+	this.<nome do atributo>
+
+	this.quantidade += quantidade;
+
 - Métodos
 
 	Representam um processamento que possui um significado.
@@ -805,19 +815,19 @@
 
 	Exemplo:
 
-	---------------------
-	|      Triangle     |
-	---------------------
-	| - A: double       |
-	| - B: double       |
-	| - C: double       |
-	---------------------
-	| + area(): double  |
-	---------------------
+	-----------------------------------------
+	|               Triangle                |
+	-----------------------------------------
+	| - A: double                           |
+	| - B: double                           |
+	| - C: double                           |
+	-----------------------------------------
+	| + area(X: double, Y: double): double  |
+	-----------------------------------------
 
 	Detalhes:
 
-	O nome da classe é escrito em negrito.
+	O nome da classe é escrito em negrito e com alinhamento centralizado.
 
 	Temos modificadores de acesso igual ao Java:
 
@@ -826,7 +836,64 @@
 	"+" para public
 	"~" para default
 
-	Os atributos são escritos na seguinte estrutura: "<modificador de acesso> <nome da variavel>: <tipo da variavel>"
+	Os atributos possuem alinhamento a esquerda na seguinte estrutura:
 
-	Os métodos são escritos na seguinte estrutura: "<modificador de acesso> <nome do método>(<nome do parametro>: <tipo do parametro>): <tipo da variavel de retorno>"
+	"<modificador de acesso> <nome da variavel>: <tipo da variavel>"
+
+	Os métodos possuem alinhamento a esquerda na seguinte estrutura:
+
+	"<modificador de acesso> <nome do método>(<nome do parametro>: <tipo do parametro>): <tipo da variavel de retorno>"
+
+- Classe "Object"
+
+	Toda classe em Java é uma subclasse da classe "Object".
+
+	Object possui os seguintes métodos:
+
+	getClass()- retorna o tipo do objeto
+	equals() - compara se o objeto é igual a outro
+	hashCode() - retorna um código hash do objeto
+	toString() - converte o objeto para string
+
+- Método "toString()"
+
+	Ao tentar imprimir um objeto diretamente no console recebemos como resultado o nome do pacote e classe ao qual o objeto pertence, assim como seu endereço de memória.
+
+	Exemplo:
+
+	entities.Product@6108b2d7
+
+	Esta informação não tem muita utilidade.
+
+	Caso seja necessario retornar informações relativas a atributos e métodos do objeto como uma String devemos utilizar o método "toString()".
+
+	Este método existe na classe pai "Object" e é herdada por todos os objetos em Java, desta forma a implementação feita em "Object" retorna o exemplo citado acima.
+
+	Podemos reescrever este método em nossas classes, retornando dentro dele como gostariamos que o objeto fosse impresso em um console.
+
+	Para isso utilizamos a estrutura abaixo:
+
+	@Override
+	public String toString() {
+		return <dados a serem exibidos do objeto>
+	}
+
+	Exemplo:
+
+	@Override
+	public String toString() {
+		return name + ", " + quantity;
+	}
+
+	O "@Override" serve para mostrar que este método esta reescrevendo um método ja definido em uma classe pai.
+
+- Método "String.format()"
+
+	Utilizado para aplicar formatação similar ao "printf" em uma String.
+
+	Exemplo:
+
+	return name + ", " + String.format("%.2f", quantity);
+
+	Normalmente é utilizada junto ao método "toString()".
 
