@@ -897,3 +897,63 @@
 
 	Normalmente é utilizada junto ao método "toString()".
 
+- Membros de instancia
+
+	Uma classe possui membros, esses membros são os atributos e os métodos.
+
+	Ao criar e instanciar um objeto cada um irá possuir uma cópia (instancia) dos membros, estes membros são chamados de "membro de intancia" ou "menbros de objeto".
+
+	Cada objeto conhece somente os seus membros, membros de outros objetos (mesmo sendo da mesma classe) não são conhecidos.
+
+- Membros estaticos
+
+	Também chamados membros de classe em oposição a membros de instância.
+
+	São membros que fazem sentido independentemente de objetos. Não precisam de objeto para serem chamados. São chamados a partir do próprio nome da classe.
+
+	Exemplo:
+
+	Math.sqrt
+
+	Não precisamos instanciar um objeto da classe Math para utiliza-la, basta chamamos seus métodos de forma direta.
+
+	Aplicações comuns:
+
+	Classes utilitárias
+	Declaração de constantes
+
+	Uma classe que possui somente membros estáticos, pode ser uma classe estática também. Esta classe não poderá ser instanciada.
+
+	Para declarar um mebro estatico basta inserir a palavra "static" em sua declaração.
+
+	Exemplo:
+
+	Atributos:
+
+	public static <tipo da variavel> <nome da variável> = <valor da variável>;
+
+	public static double pi = 3.14159;
+	
+	Métodos:
+
+	<modificador de acesso> static <tipo de retorno> <nome do método>(<ipo do parâmetro> <nome do parâmetro>, ...)
+		<código do método>
+		<retorno do método caso exista>
+	}
+
+	public static double volume(double radius) {
+		return (4.0 * PI * Math.pow(radius, 3)) / 3;
+	}
+
+- Constantes
+
+	Uma constante é um tipo especial de variável cujo valor, uma vez definido no código, não pode mais ser alterado durante a execução do programa.
+
+	Declaramos uma constante em Java usando a palavra-chave final.
+	
+	Exemplo:
+
+	public static final double PI = 3.14159;
+
+	Declarar sempre uma constante usando apenas letras maiúsculas, e em caso de palavras compostas, separá-las com um underline (_).
+
