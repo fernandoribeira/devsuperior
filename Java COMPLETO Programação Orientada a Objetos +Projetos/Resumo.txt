@@ -708,13 +708,20 @@
 
 - Referência "this"
 
-	Caso algum atributo tenha o mesmo nome de um parâmetro de método podemos referenciar o atributo do objeto com a palavra "this" antes do atributo ao utilizar o mesmo.
+	É uma referenci apara o proprio objeto.
+
+	Usos comuns:
+
+	Diferenciar atributos de variáveis locais
+	Passar o próprio objeto como argumento na chamada de um método ou construtor
+
+	Por exemplo, caso algum atributo tenha o mesmo nome de um parâmetro de método  (normalmente no método construtor) podemos referenciar o atributo do objeto com a palavra "this" antes do atributo ao utilizar o mesmo.
 
 	Exemplo:
 
 	this.<nome do atributo>
 
-	this.quantidade += quantidade;
+	this.quantidade = quantidade;
 
 - Métodos
 
@@ -956,4 +963,86 @@
 	public static final double PI = 3.14159;
 
 	Declarar sempre uma constante usando apenas letras maiúsculas, e em caso de palavras compostas, separá-las com um underline (_).
+
+- Construtores
+
+	É uma operação especial da classe, que executa no momento da instanciação do objeto.
+
+	Usos comuns:
+
+	Iniciar valores dos atributos
+	Permitir ou obrigar que o objeto receba dados / dependências no momento de sua instanciação (injeção de dependência)
+
+	Se um construtor customizado não for especificado, a classe disponibiliza o construtor vazio (default) que instacia o objeto com valores padrão de cada tipo.
+
+	Valores padrão:
+
+	Descrição 								Valor padrão
+
+	tipos numéricos inteiros				0
+	tipos numéricos com ponto flutuante		0.0
+	tipo char 			 					'\u0000' (null)
+	tipo boolean 							false
+	tipo object 							null
+
+	Também é possível especificar mais de um construtor na mesma classe (sobrecarga).
+
+	Declaração:
+
+	Construtor vazio (default)
+
+		Basta não declarar nenhum método construtor na classe e instaciar a mesma passando sem passar nenhum argumento entre os parenteses, por exemplo:
+
+		Product p = new Product();
+
+		Desta forma os atributos do objeto serão inicializados com o valor padrão para cada tipo.
+
+		Atenção, o construtor vazio so funciona se não existir nenhu outro construtor dentro da classe, caso exista algum construtor o mesmo deve ser utilziado e instanciar um objeto sem parametros resultara em erro.
+
+	Contrutor padrão
+
+		Para criarmos um contrutor padrão devemos criar um método dentro da classe que será instanciada, o método possuirá o nome da propria classe, seguindo a estrutura abaixo:
+
+		<public <nome da classe>(<parametros>) {
+			this.Nome do atributo interno da classe> = <parametro>...
+		}
+
+		public Product(String name, double price, int quantity) {
+			this.name = name;
+			this.price = price;
+			this.quantity = quantity;
+		}
+
+		Caso algum atributo necessite ser iniciado com valor especifico podemos colocar dentro do construtor tambem, por exemplo:
+
+		public Product(String name, double price, int quantity) {
+			this.name = name;
+			this.price = price;
+			this.quantity = 0;
+		}
+
+- Sobrecarga de métodos
+
+	É um recurso que uma classe possui de oferecer mais de uma método com o mesmo nome, porém com diferentes listas de parâmetros.
+
+	Pode ser utilizado em métodos comuns e em construtores.
+
+	Segue exmplo com construtores:
+
+	// Construtor com valores default
+	public Product() {
+	}
+	
+	// Construtor recebendo os 3 parametros
+	public Product(String name, double price, int quantity) {
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+	}
+	
+	// Construtor recebendo 2 parametros e um com valor default
+	public Product(String name, double price) {
+		this.name = name;
+		this.price = price;
+	}
 
