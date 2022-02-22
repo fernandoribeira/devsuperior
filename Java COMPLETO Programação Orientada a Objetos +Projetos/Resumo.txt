@@ -171,6 +171,10 @@
 
 	"System.out.println();" - sysout e depois "CTRL Espaço"
 
+	Gerar método construtor - "botão direito" > "Source" > "Generate Constructor using Fields"
+
+	Gerar métodos getters e setters - "botão direito" > "Source" > "Generate Getters and Setters"
+
 - Debug Eclise
 
 	Para marcar uma linha de breakpoint: clicar duas vezes do lado esquerdo do número da linha (irá marcar uma bolinha)
@@ -623,6 +627,16 @@
 
 	Eles servem para tornar componentes da sua aplicação mais ou menos acessíveis por outras partes do seu programa.
 
+	Resumo dos modificadores:
+
+		public: o membro é acessado por todas classes (ao menos que ele resida em um módulo diferente que não exporte o pacote onde ele está)
+
+		private: o membro só pode ser acessado na própria classe
+
+		protected: o membro só pode ser acessado no mesmo pacote, bem como em subclasses de pacotes diferentes
+
+		(default): o membro só pode ser acessado nas classes do mesmo pacote		
+
 	Detalhes dos modificadores:
 
 	"public"
@@ -1027,7 +1041,7 @@
 
 	Pode ser utilizado em métodos comuns e em construtores.
 
-	Segue exmplo com construtores:
+	Segue exemplo com construtores:
 
 	// Construtor com valores default
 	public Product() {
@@ -1044,5 +1058,38 @@
 	public Product(String name, double price) {
 		this.name = name;
 		this.price = price;
+	}
+
+- Encapsulamento
+
+	É um princípio que consiste em esconder detalhes de implementação de uma classe, expondo apenas operações seguras e que mantenham os objetos em um estado consistente.
+
+	O objeto deve sempre estar em um estado consistente, e a própria classe deve garantir isso.
+
+	Regra geral básica:
+
+	Um objeto NÃO deve expor nenhum atributo (atributos devem ter modificador de acesso private)
+	Os atributos devem ser acessados por meio de métodos get e set
+
+	Padrão para implementação de métodos getters e setters
+
+	O método get é utilizado para recuperar o valor do atributo, exemplo de declaração:
+
+	public <tipo de retorno> get<nome do atributo>() {
+		return <atributo>;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	O método set é utilizado para configurar o valor do atributo, exemplo de declaração:
+
+	public void set<nome do atributo>(<tipo do parametro> <parametro>) {
+		this.<nome do atributo> = <parametro>;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
