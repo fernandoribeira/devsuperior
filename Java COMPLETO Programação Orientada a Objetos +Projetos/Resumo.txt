@@ -1093,3 +1093,82 @@
 		this.name = name;
 	}
 
+- Área de memória Heap e Stack
+
+	O sistema operacional ao carregar um programa na memória  disponibiliza ao programa um espaço de endereçamento, esse espaço é a memória disponível para aquele programa.
+
+	O Heap, ou área de alocação dinâmica, é um espaço reservado para variáveis e dados criados durante a execução do programa. Vamos dizer que o Heap é a memória global do programa.
+
+	O Stack é uma área da memória que aloca dados, variáveis ou ponteiros quando uma função é chamada e desalocada quando a função termina. Podemos dizer então que representa a memória local àquela função. 
+
+- Variáveis tipos valor (primitivos) vs tipos referência (classes)
+
+	Variáveis tipos valor (primitivos) são criados na área Stack, são como se fossem caixas que guardam exatamente o valor que for atribuido a variável, por exemplo, se atribuirmos o valor 1 a variável teremos o valor 1 dentro da caixa.
+
+	Variáveis Tipos referência (classes) são criados inicialmente na área Stack, são como se fossem caixas assim como os tipos primitivos, mas diferente deles as caixas não guardam os valores atribuidos a variável e sim um valor de memória que aponta para um local na área Heap. Neste local da area Heap teremos uma caixa que irá guardar os valores do objeto. Funcionando como um ponteiro.
+
+	Tabela comparativa:
+
+	Classe																					Tipo Primitivo
+
+	Vantagem: usufrui de todos recursos OO 													Vantagem: é mais simples e mais performático
+	Variáveis são ponteiros 																Variáveis são caixas
+	Objetos precisam ser instanciados ou apontar para um objeto já existente. 				Não instancia. Uma vez declarados, estão prontos para uso.
+	Aceita valor null 																		Não aceita valor null
+	Y = X; "Y passa a apontar para onde X aponta" 											Y = X; "Y recebe uma cópia de X"
+	Objetos instanciados no heap 															Variaveis são criadas no stack
+	Objetos não utilizados são desalocados em um momento próximo pelo garbage collector 	Variaveis são desalocados imediatamente quando seu escopo de execução é finalizado
+
+- Garbage collector
+
+	É um processo que automatiza o gerenciamento de memória de um programa em execução.
+
+	O garbage collector monitora os objetos alocados dinamicamente pelo programa (no heap), desalocando aqueles que não estão mais sendo utilizados (não possuem mais ponteiros apontando para eles).
+
+- Desalocação por garbage collector e por escopo
+
+	A desalocação por garbage collector é feita automaticamente, sem intervenção do usuário, de tempos em tempos. Funciona para tipos referencias (classes).
+
+	A desalocação por escopo é feita assim que o escopo onde a variável foi criada é encerrado, pode ser um método, uma estrutura de repetição ou de seleção. Funciona para tipos valor (primitivos).
+
+- Vetor (array)
+
+	Vetor (array) é o nome dado a arranjos unidimensionais.
+
+	Vetor é uma estrutura de dados:
+
+		Homogênea (dados do mesmo tipo)
+		Ordenada (elementos acessados por meio de posições)
+		Alocada de uma vez só, em um bloco contíguo de memória
+
+	Vantagens:
+
+		Acesso imediato aos elementos pela sua posição
+
+	Desvantagens:
+
+		Tamanho fixo
+		Dificuldade para se realizar inserções e deleções
+
+	Declaração:
+
+		<tipo do vetor>[] <nome da variavel>;
+
+		double[] number;
+
+	Instanciação:
+
+		<nome da variavel> = new <tipo do vetor>[<tamanho do vetor>];
+
+		number = new double[3];
+
+	Declaração e instanciação na mesma linha:
+
+		<tipo do vetor>[] <nome da variavel> = new <tipo do vetor>[<tamanho do vetor>];
+
+		double[] number = new double[3];
+
+	Atributos de um vetor:
+
+		length - mostra o tamanho do vetor
+
