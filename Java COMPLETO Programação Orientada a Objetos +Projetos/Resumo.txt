@@ -1172,3 +1172,72 @@
 
 		length - mostra o tamanho do vetor
 
+- Boxing, unboxing e wrapper classes
+
+	Boxing
+
+		É o processo de conversão de um objeto tipo valor (primitivo) para um objeto tipo referência compatível, exemplo:
+
+		int x = 20;
+		Object obj = x;
+
+	Unboxing:
+
+		É o processo de conversão de um objeto tipo referência para um objeto tipo valor compatível, exemplo:
+
+		int x = 20;
+		Object obj = x;
+		int y = (int) obj;
+
+		O processo de Boxing é feito de forma implicita, já o processo de Unboxing é feito de forma explicita (com casting).
+
+	Wrapper classes
+
+		Para facilitar o processo de Boxing e Unboxing foram criadas as wrapper classes, elas são classes equivalentes aos tipos primitivos, segue tabela:
+
+		Tipo primitivo 			Wrapper classes
+
+		byte					Byte
+		short					Short
+		int						Integer
+		long					Long
+		float					Float
+		double					Double
+		char					Character
+		boolean					Boolean
+
+		Uso comum: campos de entidades em sistemas de informação, pois tipos referência (classes) aceitam valor null e usufruem dos recursos OO.
+
+		Atributos de classes devem ser declarados como Wrapper classes para boa prática, exemplo:
+
+		public class Product {
+			private String name;
+			private Double price;
+			private Integer quantity;
+			(...)
+
+		A wrappers classes podem ser utilizadas como se fosse um tipo primitivo normalmente, inclusive em calculos, exemplo:
+
+		Integer x = 10;
+		int y = x * 2;
+
+- Laço "for each"
+
+	Sintaxe opcional e simplificada para percorrer coleções.
+
+	Ela serve somente para exibição, não serve para modificar os valores dos itens das coleções.
+
+	Sintaxe:
+
+	for (<tipo da coleção> <variavel interna do laço> : <variavel da coleção>) {
+		<comandos aserem executados>
+	}
+
+	Exemplo:
+
+	String[] vect = new String[] {"Bolacha", "Minhoca", "Gabriel"};
+	
+	for (String nome : vect) {
+		System.out.println(nome);
+	}
+
