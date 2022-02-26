@@ -13,12 +13,12 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		
 		Scanner sc = new Scanner(System.in);
-		List<Employee> list = new ArrayList<>();
 		
+		List<Employee> list = new ArrayList<>();
 		int n;
 		int idSalaryIncrease;
 		double percentage;
-		Employee result;
+		boolean result;
 		
 		System.out.print("How many employees will be registered? ");
 		n = sc.nextInt();
@@ -34,6 +34,12 @@ public class Program {
 			System.out.println("Employee #" + i + ":");
 			System.out.print("Id: ");
 			id = sc.nextInt();
+			
+			while (hasId(list, id)) {
+				System.out.print("Id already taken. Try again: ");
+				id = sc.nextInt();
+			}
+			
 			System.out.print("Name: ");
 			sc.nextLine();
 			name = sc.nextLine();
@@ -47,20 +53,21 @@ public class Program {
 		
 		System.out.print("Enter the employee id that will have salary increase: ");
 		idSalaryIncrease = sc.nextInt();
-		System.out.print("Enter the percentage: ");
-		percentage = sc.nextDouble();
 		
+		result = false;
+		for (Employee e : list) {
+			if (e.getId() == idSalaryIncrease) {
+				result = true;
+				System.out.print("Enter the percentage: ");
+				percentage = sc.nextDouble();
+				e.increaseSalary(percentage);
+			}
+		}
 
-		
-		
-		result = list.get(idSalaryIncrease);
+		if (result == false) {
+			System.out.println("This id does not exist!");
+		}
 
-		System.out.println(result);
-
-		
-		
-		
-		
 		System.out.println();
 		
 		System.out.println("List of employees:");
@@ -71,4 +78,19 @@ public class Program {
 		sc.close();
 		
 	}
+	
+	public static boolean hasId(List<Employee> list, int id) {
+		
+		boolean exist;
+		exist = false;
+		
+		for (Employee e : list) {
+			if (e.getId() == id) {
+				exist = true;
+			}
+		}
+		
+		return exist;
+	}
+	
 }
