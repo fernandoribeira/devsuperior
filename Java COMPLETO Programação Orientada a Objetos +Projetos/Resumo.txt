@@ -1241,3 +1241,49 @@
 		System.out.println(nome);
 	}
 
+- Listas
+
+	Lista é uma estrutura de dados:
+
+		Homogênea (dados do mesmo tipo)
+		Ordenada (elementos acessados por meio de posições)
+		Inicia vazia, e seus elementos são alocados sob demanda
+		Cada elemento ocupa um "nó" (ou nodo) da lista
+		Não aceita tipos primitivos, somente classes
+
+	Seu tipo é o "List".
+
+	Podemos declarar um tipo como "List" porem não podemos instanciar devido a ser uma interface, a instanciação deve ser feita em uma de suas implementações.
+
+	Seguem algumas classes que implementam "List":
+
+		AbstractList, AbstractSequentialList, ArrayList, AttributeList, CopyOnWriteArrayList, FilteredList, LinkedList, ListBinding, ListExpression, ListProperty, ListPropertyBase, ModifiableObservableListBase, ObservableListBase, ReadOnlyListProperty, ReadOnlyListPropertyBase, ReadOnlyListWrapper, RoleList, RoleUnresolvedList, SimpleListProperty, SortedList, Stack, TransformationList, Vector
+
+	Vantagens:
+
+		Tamanho variável
+		Facilidade para se realizar inserções e deleções
+
+	Desvantagens:
+
+		Acesso sequencial aos elementos
+
+	Declaração:
+
+		List<tipo a ser guardado> <nome da lista> = new <implementação da lista><>();
+
+		List<String> list = new ArrayList<>();
+
+	Métodos:
+
+		size() - mostra o tamanho da lista
+		add(<elemento>) - adicionar elemento na ultima posição
+		add(<posição>, <elemento>) - adicionar elemento na posição desejada
+		remove(<elemento ou posição>) - remover elemento da lista
+		get(<posição>) - obter o elemento da posição
+		indexOf(<elemento>) - busca o primeiro elemento na lista com o valor desejado
+		indexOf(<elemento>) - busca o ultimo elemento na lista com o valor desejado
+
+
+
+    
