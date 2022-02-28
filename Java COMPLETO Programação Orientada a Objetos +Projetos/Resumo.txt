@@ -1335,7 +1335,7 @@
 
 		import java.util.Date;
 
-		Um objeto Date internamente armazena o número de milissegundos desde a meia noite do dia 1 de janeiro de 1970 (UTC).
+		Um objeto Date internamente armazena o número de milissegundos (tipo long) desde a meia noite do dia 1 de janeiro de 1970 (UTC - timezone GMT).
 
 		A prática comum é salvar sempre as datas no formato UTC e efetuar a conversão para leitura / gravação conforme o timezone local.
 
@@ -1346,7 +1346,8 @@
 		Podemos instanciar uma data de vária formas, por exemplo:
 
 		new Date() - momento atual
-		new Date(<tempo em milisegundos>) - momento que usa como referência os milisegundos a partir de "1 de janeiro de 1970 00:00:00"
+		new Date(System.currentTimeMillis()) - momento atual
+		new Date(<tempo em milisegundos>L) - momento que usa como referência os milisegundos a partir de "1 de janeiro de 1970 00:00:00"
 
 		Mas o mais comum é instanciar um objeto Date partindo de uma data em String, para isso utilizamos uma classe de formatação de datas, a classe "SimpleDateFormat".
 
@@ -1358,7 +1359,7 @@
 
 		import java.text.SimpleDateFormat;
 
-		Essa classe define formatos (máscaras) para conversão entre Date e String, seu uso principal é para instanciar um objeto Date a partir de uma data em String ou para exibir uma  objeto Date em um formato específico.
+		Essa classe define formatos (máscaras) para conversão entre Date e String, seu uso principal é para instanciar um objeto Date a partir de uma data em String ou para exibir um objeto Date em um formato específico.
 
 		Exemplo de declaração:
 
@@ -1370,8 +1371,8 @@
 
 		Podemos instanciar com diversas máscaras, por exemplo:
 
-		"dd/MM/yyyy" - 23/07/2018
-		"dd/MM/yyyy HH:mm:ss" - 23/07/2018 15:42:07
+		"dd/MM/yyyy"                   - 23/07/2018
+		"dd/MM/yyyy HH:mm:ss"          - 23/07/2018 15:42:07
 		"yyyy.MM.dd G 'at' HH:mm:ss z" - 2001.07.04 AD at 12:08:56 PDT
 		"EEE, MMM d, ''yy"             - Wed, Jul 4, '01
 		"h:mm a"                       - 12:08 PM
@@ -1423,13 +1424,31 @@
 
 		System.out.println(sdf.format(data));
 
+		Por padrão é utilizado o timezone local da máquina, para alterarmos devemos definir a configuração em um objeto "SimpleDateFormat" conforme abaixo:
+
+		sdf.setTimeZone(TimeZone.getTimeZone("<timezone desejado>"));
+
+		Por exemplo, timezone "GMT":
+
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		Esta alteração necessita do import da classe "java.util.TimeZone";
+
 	Classe "Instant"
 
-		É utilizada para tarnsformar um texto no formato texto ISO 8601 em objeto "Date".
+		A partir do Java versão 8 foram criadas novas classes para tratamento de datas, uma delas é a classe Instant.
+
+		Éla é utilizada para transformar uma data texto no formato ISO 8601 (UTC) em objeto "Date".
+
+		Desta forma para utiliza-la devemos importar a classe da seguinte forma:
+
+		import java.time.Instant;
 
 		O padrao utilizado para gravação de datas é o ISO 8601 que compreende o seguinte formato:
 
 		yyyy-MM-ddTHH:mm:ssZ
+
+		Exemplo:
 
 		2018-06-25T15:42:07Z
 
@@ -1437,5 +1456,35 @@
 
 		Date <nome da variável> = Date.from(Instant.parse("<data no formato texto ISO 8601"));
 
+		Exemplo:
+
 		Date date = Date.from(Instant.parse("2018-06-25T15:42:07Z"));
+
+	Classe "Calendar"
+
+		Para pegarmos informação especifica de uma data ou efetuarmos calculos com datas utilizamos a classe "Calendar", ela faz parte do pacote "java.util".
+
+		Desta forma para utilza-la devemos importar a classe da seguinte forma:
+
+		import java.util.calendar;
+
+		Exemplo de declaração / instanciação:
+
+		Calendar cal = Calendar.getInstance();
+
+		Temos diversos usos para esa classe.
+
+		Atribuindo uma data ao calendario:
+
+		cal.setTime(<objeto Date>);
+
+		Atribuindo uma data de calendário para um objeto Date:
+
+		<objeto Date> = cal.getTime();
+
+		Adicionando ou subtraindo tempo a data do calendario:
+
+		cal.add(<o que será atribuido (verificar na documentação)>, <quantidade a ser atribuida ou subtraida com valor negativo>);
+
+
 
