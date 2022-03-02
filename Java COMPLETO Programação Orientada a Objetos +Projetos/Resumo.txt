@@ -1625,3 +1625,54 @@
 
 		Entrei no VIM por engano. Como sair? 														Tecle ESC, depois digite :q! e tecle ENTER
 
+- Enumerações
+
+	É um tipo especial que serve para especificar de forma literal um conjunto de constantes relacionadas.
+
+	Palavra chave em Java: enum
+
+	Vantagem: melhor semântica, código mais legível e auxiliado pelo compilador
+
+	Em um caso comum ela é utilizada para substituir uma variavel array de uma classe que contenha caracteristicas de um objeto.
+
+	Ela é declarada da seguinte forma:
+
+		package entities.enums;
+
+		public enum <nome da enum> {
+			<itens da enum>
+			...
+		}
+
+	Exemplo:
+
+		package entities.enums;
+
+		public enum OrderStatus {
+			PENDING_PAYMENT,
+			PROCESSING,
+			SHIPPED,
+			DELIVERED;
+		}
+
+	Para utilizar basta importar a enum e declarar como uma variavel da seguinte forma:
+
+		import entities.enums.<nome da enum>;
+		....
+		<modificador de acesso> <nome da enum> <nome da variavel>;
+
+	Exemplo:
+
+		import entities.enums.OrderStatus;
+		...
+		private OrderStatus status;
+
+	O acesso a uma constante da enu é feito da seguinte forma:
+
+		<nome da variavel>.<constante>;
+
+	Exemplo:
+
+		status.PENDING_PAYMENT;
+
+	
