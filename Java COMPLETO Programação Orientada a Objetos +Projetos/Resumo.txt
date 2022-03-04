@@ -1522,6 +1522,27 @@
 		Use MinTTY
 		DESMARCAR: Enable Git Credential Manager
 
+		É recomendado configurar o Windows para exibir os arquivos ocultos e a extensão dos arquivos para facilitar o uso do Git.
+
+	Configurar usuário do GIT
+
+		git config --list
+		git config --global user.name "<nome do usuário>"
+		git config --global user.email "<email do usuário>"
+		git config --list
+
+	Arquivo .gitignore
+
+		Para quê serve o arquivo .gitignore?
+
+		Serve para informar o GIT quais arquivos devem ser ignorados no sincronismo, isso faz com que arquivos d elog ou compilados por exemplo nao sejam enviados ao Github. Isso econimiza tempo no sincronismo e espaço no projeto.
+
+		Como saber o que colocar no arquivo .gitignore?
+
+		Normalmente ao criar um projeto no Github temos um campo para selecionar um template para o .gitignore, podemos utilizar o mesmo sem problema e ir adequando posteriormente caso necessário.
+
+		Mas voce pode criar um arquivo .gitignore manualmente no projeto  e inserir os arquivos e extensões de arquivos que quiser.
+
 	Criar um novo projeto
 
 		Passos:
@@ -1533,15 +1554,15 @@
 
 		3. Abra um terminal na pasta do seu projeto
 
-		4. IMPORTANTE: certifique-se de estar identificado no Git do seu computador (nome e email) executando os comandos abaixo
-		git config --list
-		git config --global user.name "Nelio Alves"
-		git config --global user.email "acenelio@gmail.com"
-
+		4. IMPORTANTE: certifique-se de estar identificado no Git do seu computador (nome e email) executando os comandos de configuração de usuário
+		
 		5. Faça os comandos a seguir
 
 		- Inicia um novo repositório local na pasta do seu projeto
 		git init
+
+		- Altera o nome da branch de "master" para "main" (novo padrão do Git)
+		git branch -M main
 
 		-Associa seu repositório local ao repositório remoto, com o apelido de "origin"
 		ATENÇÃO: troque pelo caminho do seu repositório do Github
@@ -1564,17 +1585,23 @@
 		ATENÇÃO: nas próximas vezes basta fazer: git push
 		git push -u origin master
 
-	Arquivo .gitignore
+	Salvando uma nova versão
 
-		Para quê serve o arquivo .gitignore?
+		Passos:
 
-		Serve para informar o GIT quais arquivos devem ser ignorados no sincronismo, isso faz com que arquivos d elog ou compilados por exemplo nao sejam enviados ao Github. Isso econimiza tempo no sincronismo e espaço no projeto.
+		- Verifica status dos arquivos
+		git status
 
-		Como saber o que colocar no arquivo .gitignore?
+		- Adiciona todos arquivos ao stage
+		git add .
 
-		Normalmente ao criar um projeto no Github temos um campo para selecionar um template para o .gitignore, podemos utilizar o mesmo sem problema e ir adequando posteriormente caso necessário.
+		- Salva uma nova versão do projeto
+		git commit -m "<mensagem de commit>"
 
-	Trabalhando com um projeto existente
+		- Envia o repositório local para o repositório remoto
+		git push
+
+	Trabalhando (clonando) um projeto existente
 
 		Passos:
 
@@ -1597,11 +1624,27 @@
 
 		git push
 
+	Verificando o histórico de versões
+
+		Para log mais completo executar "git log"
+
+		Para log mais simples executar "git log --oneline"
+
+	
+
 	A sequência de commits deve ser respeitada
 
 		Sempre execute o omando "git pull" para sincronizar seu repositorio local antes de editar o codigo e antes de executar um commit.
 
 		Caso seu repositorio local esteja diferente do remoto e voce tente efetuar um comando git push será apresentado erro.
+
+
+
+
+
+
+
+
 
 	Kit de primeiros socorros
 
@@ -1624,6 +1667,34 @@
 		Quero mudar o meu repositório remoto "origin" 												git remote set-url origin <URL do projeto>
 
 		Entrei no VIM por engano. Como sair? 														Tecle ESC, depois digite :q! e tecle ENTER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - Enumerações
 
