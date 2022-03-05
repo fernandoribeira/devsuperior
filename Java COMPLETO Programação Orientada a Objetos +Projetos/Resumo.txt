@@ -1636,34 +1636,69 @@
 		modifief - arquivos ja comitados anteriormente que foram modificados
 		deleted - arquivos ja comitados anteriormente que foram excluidos
 
-
-
 	A sequência de commits deve ser respeitada
 
 		Sempre execute o omando "git pull" para sincronizar seu repositorio local antes de editar o codigo e antes de executar um commit.
 
 		Caso seu repositorio local esteja diferente do remoto e voce tente efetuar um comando git push será apresentado erro.
 
+	Git checkout
 
+		Permite modificar temporariamente os arquivos do projeto ao estado de um dado commit ou branch
 
+		Código do commit, HEAD:
 
+		Cada commit possui um código, que pode ser utilizado para referenciar o commit
+		O último commit do histórico do branch corrente também pode ser referenciado pela palavra HEAD
+		É possível referenciar um commit N versões antes de HEAD usando ~N, por exemplo:
+		HEAD~1 (penúltimo commit)
+		HEAD~2 (antepenúltimo commit)
 
+		IMPORTANTE: antes de fazer o checkout para voltar para HEAD, certifique-se de que não haja mudanças nos arquivos. Se você acidentalmente mudou alguma coisa, desfaça as modificações usando:
 
+		git reset
+		git clean -df
+		git checkout -- .
 
+	Como resolver push rejeitado
 
+		Não é permitido enviar um push se seu repositório local está diferente em relação ao histórico do repositório remoto.
+
+		Para evitar isso sempre execute o comando "git pull" antes de iniciar seu trabalho e antes de efetuar o commit.
+
+		Mas caso o problema ocorra ao tentar efetuar o push é necessário efetuar uma ação de integração.
+
+		Caso os arquivos modificados nao sejam os mesmos entre o repo remoto e local sera feito um merge automatico do repo remoto com o local, gerando um commit automatico, resolvendo assim o problema e permitindo a execução do pull.
+
+		Será aberta uma tela do Vim para inserção da mensagem de commit, podemos deixar a mensagem padrão e salvar / sair.
+
+		Mas caso os arquivos modificados sejam os mesmos entre o repo remoto e local não sera feito um merge automatico, teremos de atuar manualmente na correção / merge dos arquivos.
+
+		Após tentar a execução do pull e a falha ser apresentada, o Git entra em modo merge manual, executando o comando git status é informado qual arquivo esta com conflito.
+
+		Abrindo este arquivo no editor o Git irá inserir automaticamente (junto do código do commit) todas as informações no arquivo.
+
+		Devemos editar o arquivo, deixar da forma correta e efetuar um novo processo de commit / pull.
 
 	Kit de primeiros socorros
 
 		Problema 																					Comando
 
+		Duvida em relação ao conteudo do arquivo 													git diff
+
 		Remover arquivos da area de stage 															git reset
 
-		Quero desfazer tudo que eu fiz desde o último commit 										git clean -df
+		Quero desfazer tudo que eu fiz desde o último commit 										git reset
+																									git clean -df
 																									git checkout -- .
 
 		Preciso remover o último commit, porém mantendo os arquivos do jeito que estão 				git reset --soft HEAD~1
 
+		Preciso remover qualquer commit, porém mantendo os arquivos do jeito que estão 				git reset --soft <código do commit>
+
 		Preciso remover o último commit, inclusive as alterações nos arquivos						git reset --hard HEAD~1
+
+		Preciso remover qualquer commit, inclusive as alterações nos arquivos						git reset --hard <código do commit>
 
 		Quero alterar temporariamente os arquivos do projeto 										git checkout <código do commit>
 		de modo a ficarem no estado do commit informado
@@ -1674,35 +1709,13 @@
 
 		Quero mudar o meu repositório remoto "origin" 												git remote set-url origin <URL do projeto>
 
-		Entrei no VIM por engano. Como sair? 														Tecle ESC, depois digite :q! e tecle ENTER
+		Entrei no VIM por engano. Como sair sem salvar? 											Tecle ESC, depois digite :q! e tecle ENTER
 
+		Entrei no VIM por engano. Como sair salvando?	 											Tecle ESC, depois digite :wq! e tecle ENTER
 
+	 	Como atualizar o repositório local em relação ao remoto 									git pull
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	 	Como sobrescrever um histórico no Github 													git push -f
 
 - Enumerações
 
