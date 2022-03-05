@@ -1630,7 +1630,13 @@
 
 		Para log mais simples executar "git log --oneline"
 
-	
+	Status dos arquivos
+
+		untracked - arquivos novos
+		modifief - arquivos ja comitados anteriormente que foram modificados
+		deleted - arquivos ja comitados anteriormente que foram excluidos
+
+
 
 	A sequência de commits deve ser respeitada
 
@@ -1649,6 +1655,8 @@
 	Kit de primeiros socorros
 
 		Problema 																					Comando
+
+		Remover arquivos da area de stage 															git reset
 
 		Quero desfazer tudo que eu fiz desde o último commit 										git clean -df
 																									git checkout -- .
