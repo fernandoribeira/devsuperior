@@ -865,6 +865,42 @@
 
 	"<modificador de acesso> <nome do método>(<nome do parametro>: <tipo do parametro>): <tipo da variavel de retorno>"
 
+- Diagrama UML para ENUM
+
+	-------------------------
+	| <<enum>>              |
+	| <nome da enum>        |
+	-------------------------
+	| <constantes da enum>  |
+	-------------------------
+	|                       |
+	-------------------------
+
+	Exemplo:
+
+	-----------------------------------------
+	|               <<enum>>                |
+	|              OrderStatus              |
+	-----------------------------------------
+	| - PENDING_PAYMENT: int = 0            |
+	| - PROCESSING: int = 1                 |
+	| - DELIVERED: int = 2                  |
+	-----------------------------------------
+	|                                       |
+	-----------------------------------------
+
+	Detalhes:
+
+	Inicialmente colocamos a descriçã]o "<<enum>>"
+
+	O nome da enum é escrito em negrito e com alinhamento centralizado.
+
+	É utiliado o indicador "private" para cada constante.
+
+	As constantes possuem alinhamento a esquerda na seguinte estrutura:
+
+	"<modificador de acesso> <nome da constante em maiusculo>: int = <valor de posição>"
+
 - Classe "Object"
 
 	Toda classe em Java é uma subclasse da classe "Object".
@@ -1725,14 +1761,16 @@
 
 	Vantagem: melhor semântica, código mais legível e auxiliado pelo compilador
 
-	Em um caso comum ela é utilizada para substituir uma variavel array de uma classe que contenha caracteristicas de um objeto.
+	Em um caso comum ela é utilizada para substituir uma variavel array de uma classe que contenha caracteristicas de um objeto e essas caracterisiticas são fixas.
+
+	A enums ficam no pacote "entities.enums";
 
 	Ela é declarada da seguinte forma:
 
 		package entities.enums;
 
 		public enum <nome da enum> {
-			<itens da enum>
+			<itens da enum em letra maiuscula>
 			...
 		}
 
@@ -1759,12 +1797,34 @@
 		...
 		private OrderStatus status;
 
-	O acesso a uma constante da enu é feito da seguinte forma:
+	O acesso a uma constante da enum é feito da seguinte forma:
 
-		<nome da variavel>.<constante>;
+		<nome da variavel enum>.<constante>;
 
 	Exemplo:
 
 		status.PENDING_PAYMENT;
+
+	A conversão de String para enum é comum pois os sistemas podem informar os valores como String, devedo ser convertida da seguinte forma:
+
+		<nome da variavel enum>.valueOf("<string>");
+
+		Exemplo:
+
+		status.valueOf("DELIVERED");
+
+- Categorias de classes
+
+	Em um sistema orientado a objetos, de modo geral "tudo" é objeto.
+
+	Por questões de design tais como organização, flexibilidade, reuso, delegação, etc., há várias categorias de classes:
+
+	Entities
+	Controllers
+	Services
+	Views
+	Repositories
+
+- Composição de objetos
 
 	
