@@ -1266,7 +1266,7 @@
 	Sintaxe:
 
 	for (<tipo da coleção> <variavel interna do laço> : <variavel da coleção>) {
-		<comandos aserem executados>
+		<comandos a serem executados>
 	}
 
 	Exemplo:
@@ -1827,4 +1827,18 @@
 
 - Composição de objetos
 
-	Um
+	É um tipo de associação que permite que um objeto contenha outro, send uma relação "tem-um" ou "tem-vários".
+
+	Vantagens:
+
+	Organização (divisão de responsabilidades)
+	Coesão
+	Flexibilidade
+	Reuso
+
+	Nota: embora o símbolo UML para composição (todo-parte) seja o diamante preto, neste contexto estamos chamando de composição qualquer associação tipo "tem-um" e "tem-vários".
+
+	Sempre que tivermos uma composição "tem-varios" a variável da mesma não é instanciada no construtor recebendo paramentro, ela é instanciada vazia no construtor.
+
+	Esta mesma variável nao deve ter o método "set" configurado, e sim métodos "add" e "remove".
+
