@@ -1860,5 +1860,31 @@
 			contracts.remove(contract);
 		}
 
+- Classe "StringBuilder"
 
+	Essa classe permite criar e manipular dados de Strings dinamicamente, ou seja, podem criar variáveis de String modificáveis.
+
+	O significado da classe StringBuilder não tem o mesmo sentido que classe String. Existe uma diferença entre essas classes, veja algumas características.
+
+	Características StringBuilder
+
+	    Armazena caracteres especificados pela sua capacidade, caso ela seja excedida, é aumentada para acomodar os caracteres adicionais
+	    Não precisa alocar novos objetos quando realiza uma concatenação
+	    Não são sincronizadas
+	    Não são seguras para threads
+
+	Uma vantagem sobre a classe String é a concatenação de strings. Pois quando concatena strings com StringBuilder é invocado o método append. Esse método aloca novas strings concatenadas para o mesmo objeto, ou seja, cada vez que concatena strings não são criadas cópias dos objetos como é realizado pelo método concat da classe String, contribuindo para um melhor desempenho do sistema.
+
+	Exemplo de declaração:
+
+		StringBuilder  sb;
+
+	Exemplo de instanciação:
+
+		sb = new StringBuilder();
+
+	Métodos
+
+		append("<text>") - adiciona o texto no final
+		toString() - mostra o texto
 
