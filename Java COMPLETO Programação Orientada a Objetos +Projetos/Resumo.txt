@@ -1367,7 +1367,7 @@
 
 		Para datas em Java utilizamos a classe "Date", ela faz parte do pacote "java.util".
 
-		Desta forma para utilza-la devemos importar a classe da seguinte forma:
+		Desta forma para utiliza-la devemos importar a classe da seguinte forma:
 
 		import java.util.Date;
 
@@ -1838,7 +1838,27 @@
 
 	Nota: embora o símbolo UML para composição (todo-parte) seja o diamante preto, neste contexto estamos chamando de composição qualquer associação tipo "tem-um" e "tem-vários".
 
-	Sempre que tivermos uma composição "tem-varios" a variável da mesma não é instanciada no construtor recebendo paramentro, ela é instanciada vazia no construtor.
+	Sempre que tivermos uma composição "tem-varios" utilizamos a classe "List", a variável da mesma não é instanciada no construtor recebendo paramentro, ela é instanciada vazia no construtor.
+
+	Exemplo:
+
+		private List<HourContract> contracts;
+
+		public Worker() {
+			this.contracts = new ArrayList<HourContract>();
+		}
 
 	Esta mesma variável nao deve ter o método "set" configurado, e sim métodos "add" e "remove".
+
+	Exemplo:
+
+		public void addContract(HourContract contract) {
+			contracts.add(contract);
+		}
+		
+		public void removeContract(HourContract contract) {
+			contracts.remove(contract);
+		}
+
+
 
