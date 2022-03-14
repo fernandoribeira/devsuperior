@@ -2042,4 +2042,25 @@
 
 		Performance, atributos de tipo de uma classe final são analisados de forma mais rápida em tempo de execução.
 
-- 
+- Polimorfismo
+
+	Pilares da OOP:
+
+	Encapsulamento
+	Herança
+	Polimorfismo
+
+	Em Programação Orientada a Objetos, polimorfismo é recurso que permite que variáveis de um mesmo tipo mais genérico possam apontar para objetos de tipos específicos diferentes, tendo assim comportamentos diferentes conforme cada tipo específico.
+
+	Exemplo:
+
+	Account x = new Account(1020, "Alex", 1000.0); // Variavel do tipo Account instanciada com um tipo Account
+	Account y = new SavingsAccount(1023, "Maria", 1000.0, 0.01); // Variavel do tipo Account instanciada com um tipo SavingsAccount
+
+	x.withdraw(50.0); // Irá chamar o método do objeto Account
+	y.withdraw(50.0); // Irá chamar o método do objeto SavingsAccount
+
+	Importante entender que a associação do tipo específico com o tipo genérico é feita em tempo de execução (upcasting).
+
+- Classes abstratas
+
