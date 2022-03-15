@@ -408,6 +408,10 @@
 	Math.pow(<valor x>, <valor y>); 		resultado de x elevado a y
 	Math.abs(<valor x>); 					resultado da valor absoluto de x
 
+	A classe Math tanbém ja fornece o valor de PI como uma variável:
+
+	Math.PI
+
 	Existem diversas outras funções já prontas, basta verificar a documentação da classe "java.lan.Math".
 
 - Operadores comparativos
@@ -2063,4 +2067,40 @@
 	Importante entender que a associação do tipo específico com o tipo genérico é feita em tempo de execução (upcasting).
 
 - Classes abstratas
+
+	São classes que não podem ser instanciadas.
+
+	É uma forma de garantir herança total, somente subclasses não abstratas podem ser instanciadas, mas nunca a superclasse abstrata.
+
+	Sintaxe:
+
+	Basta acrescentarmos a palavra "abstract" na declaração da classe após o modificador de acesso, exemplo:
+
+		public abstract class <nome da classe> {
+			...
+		}
+
+	Na notação UML o nome da classe abstrata é escrito em itálico.
+
+	Principai susos de classes abstratas:
+
+	Reuso de código (herança)
+
+	Polimorfismo, a superclasse classe genérica nos permite tratar de forma fácil e uniforme todos os tipos de objetos, inclusive com polimorfismo se for o caso. Por exemplo, você pode colocar todos tipos de objetos em uma mesma coleção.
+
+- Métodos abstratos
+
+	São métodos que não possuem implementação, somente sua ssinatura (declaração).
+
+	Métodos precisam ser abstratos quando a classe é genérica demais para conter sua implementação.
+
+	Se uma classe possuir pelo menos um método abstrato, então esta classe também é abstrata.
+
+	Sintaxe:
+
+	Basta acrescentarmos a palavra "abstract" na declaração do método após o modificador de acesso e removermos as chaves que delimitam o corpo do kmétodo, exemplo:
+
+		public abstract void <nome do método>();
+
+	Na notação UML o nome do método abstrato é escrito em itálico.
 
