@@ -611,9 +611,18 @@
 
 	Exemplo:
 
-	package <nome do pacote>;
+		package <nome do pacote>;
 
-	package entities;
+		package entities;
+
+	Sugestão de pacotes
+
+		application
+		model
+			entities
+			enums
+			exceptions
+			services
 
 - Declaração import
 
@@ -2103,4 +2112,101 @@
 		public abstract void <nome do método>();
 
 	Na notação UML o nome do método abstrato é escrito em itálico.
+
+- Exceções
+
+Uma exceção é qualquer condição de erro ou comportamento inesperado encontrado por um programa em execução.
+
+Em Java, uma exceção é um objeto herdado da classe, segue hierarquia básica:
+
+	java.lang.Throwable
+	    java.lang.Error
+	    java.lang.Exception
+
+Erros da classe "java.lang.Error" compilador não obriga a tratar ou propagar.
+
+Erros da classe "java.lang.Exception" o compilador obriga a tratar ou propagar.
+
+Quando lançada, uma exceção é propagada na pilha de chamadas de métodos em execução, até que seja capturada (tratada) ou o programa seja encerrado.
+
+Por que exceções?
+
+	O modelo de tratamento de exceções permite que erros sejam tratados de forma consistente e flexível, usando boas práticas.
+
+Vantagens:
+
+	Delega a lógica do erro para a classe responsável por conhecer as regras que podem ocasionar o erro.
+	Trata de forma organizada (inclusive hierárquica) exceções de tipos diferentes.
+	A exceção pode carregar dados quaisquer.
+
+Estrutura "try-catch"
+
+	O bloco "try" contém o código que representa a execução normal do trecho de código que pode acarretar em uma exceção.
+
+	O bloco "catch" contém o código a ser executado caso uma exceção ocorra, devendo ser especificado o tipo da exceção a ser tratada (upcasting é permitido).
+
+	Devemos ter somente um bloco "try" porem podemos ter diversos blocos "catch" associados, cada um capturando uma exceção diferente.
+
+	Sintaxe:
+
+		try {
+			<codigo que pode disparar uma exceção>
+		}
+		catch (<tipo da exceção> e) {
+			<tratativa da exceção>
+		}
+		catch (<tipo da exceção> e) {
+			<tratativa da exceção>
+		}
+		catch (<tipo da exceção> e) {
+			<tratativa da exceção>
+		}
+		...
+
+Bloco "finally"
+
+	É um bloco que contém código a ser executado independentemente de ter ocorrido ou não uma exceção, ele é sempre colocado ao final da estrutura try-catch.
+
+	Exemplo de uso: fechar um arquivo, conexão de banco de dados, ou outro recurso específico ao final do processamento.
+
+	Sintaxe:
+
+		try {
+			<codigo que pode disparar uma exceção>
+		}
+		catch (<tipo da exceção> e) {
+			<tratativa da exceção>
+		}
+		catch (<tipo da exceção> e) {
+			<tratativa da exceção>
+		}
+		catch (<tipo da exceção> e) {
+			<tratativa da exceção>
+		}
+		...
+		finally {
+			<código a ser executado independente do resultado das condições anteriores>
+		}
+
+
+Pilha de chamadas de métodos
+
+	Ao ser lançada uma exceção ela mostra a pilha de chamada de métodos e encerra o programa, por exemplo:
+
+		java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 3
+		at application.Program.method2(Program.java:33)
+		at application.Program.method1(Program.java:19)
+		at application.Program.main(Program.java:11)
+
+	Vemos na sequencia inversa os métodos chamados que implicaram em erro:
+
+		at application.Program.method2(Program.java:33)
+		at application.Program.method1(Program.java:19)
+		at application.Program.main(Program.java:11)
+
+	Caso a exceção seja capturada, se quisermos podemos ver esta pilha de chamada de métodos, basta chamar o método abaixo na variável que capturou a exceção:
+
+		<variável>.printStackTrace();
+
+	Será mostrada a pilha de chamada de métodos do erro porém o sistema continuara funcionando.
 
