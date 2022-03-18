@@ -2120,12 +2120,12 @@ Uma exceção é qualquer condição de erro ou comportamento inesperado encontr
 Em Java, uma exceção é um objeto herdado da classe, segue hierarquia básica:
 
 	java.lang.Throwable
-	    java.lang.Error
 	    java.lang.Exception
-
-Erros da classe "java.lang.Error" compilador não obriga a tratar ou propagar.
+	    java.lang.RuntimeException
 
 Erros da classe "java.lang.Exception" o compilador obriga a tratar ou propagar.
+
+Erros da classe "java.lang.RuntimeException" compilador não obriga a tratar ou propagar.
 
 Quando lançada, uma exceção é propagada na pilha de chamadas de métodos em execução, até que seja capturada (tratada) ou o programa seja encerrado.
 
@@ -2138,6 +2138,10 @@ Vantagens:
 	Delega a lógica do erro para a classe responsável por conhecer as regras que podem ocasionar o erro.
 	Trata de forma organizada (inclusive hierárquica) exceções de tipos diferentes.
 	A exceção pode carregar dados quaisquer.
+	Construtores podem ter tratamento de exceções.
+	Possibilidade de auxílio do compilador (Exception).
+	Código mais simples. Não há aninhamento de condicionais: a qualquer momento que uma exceção for disparada, a execução é interrompida e cai no bloco catch correspondente.
+	É possível capturar inclusive outras exceções de sistema.
 
 Estrutura "try-catch"
 
@@ -2188,7 +2192,6 @@ Bloco "finally"
 			<código a ser executado independente do resultado das condições anteriores>
 		}
 
-
 Pilha de chamadas de métodos
 
 	Ao ser lançada uma exceção ela mostra a pilha de chamada de métodos e encerra o programa, por exemplo:
@@ -2208,5 +2211,69 @@ Pilha de chamadas de métodos
 
 		<variável>.printStackTrace();
 
-	Será mostrada a pilha de chamada de métodos do erro porém o sistema continuara funcionando.
+	Caso a exceção seja capturada, se quisermos podemos ver esta a mensagem de erro, basta chamar o método abaixo na variável que capturou a exceção:
+
+		<variável>.getMessage();
+
+Cláusula "throws"
+
+	Propaga a exceção ao invés de tratá-la, é inserida na declaração do método que pode lançar a exceção, por exemplo:
+
+	<declaração do método> throws <exceção que pode ser lançada {
+		...
+	}
+
+	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
+		...
+	}
+
+Cláusula "throw"
+
+	Lança uma exceção, finalizando o método e devolvendo a exceção ao método que o chamou, por exemplo:
+
+	throw new <nome da exceção>("<menagem de exceção>");
+
+	throw new DomainException("Reservation dates for update must be future dates");
+
+Criação de exceção personalizada
+
+	Podemos criar nossas proprias exceções, para isso basta criar uma classe no pacote "model.exceptions".
+
+	Esta classe deve receber a herança de uma classe de exceção, como "RuntimeException" ou "Exception".
+
+	Em corpo declaramos o "serialVersionUID".
+
+	Em seguida criamos o construtor que recebe uma mensagem String e passa este parametro ao construtor da classe pai.
+
+	Exemplo:
+
+	package model.exceptions;
+
+	public class <nome da exceção a ser criada> extends <nome da exceção que fornecera a herança> {
+
+		private static final long serialVersionUID = <valor>;
+
+		public <nome da exceção a ser criada>(String message) {
+			super(message);
+		}
+		
+	}
+
+	Exemplo prático:
+
+	package model.exceptions;
+
+	public class DomainException extends RuntimeException {
+
+		private static final long serialVersionUID = 1L;
+
+		public DomainException(String message) {
+			super(message);
+		}
+		
+	}
+
+	Apos a criação da exceção basta importar ela nas classes que forem utiliza-la e lançar a exceção com a clausula "throw".
+
+	Por padrão as classes de exceção possuem a palavra "Exception" em senome, por exemplo "DomainException".
 
