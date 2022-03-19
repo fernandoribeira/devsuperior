@@ -2115,165 +2115,210 @@
 
 - Exceções
 
-Uma exceção é qualquer condição de erro ou comportamento inesperado encontrado por um programa em execução.
+	Uma exceção é qualquer condição de erro ou comportamento inesperado encontrado por um programa em execução.
 
-Em Java, uma exceção é um objeto herdado da classe, segue hierarquia básica:
+	Em Java, uma exceção é um objeto herdado da classe, segue hierarquia básica:
 
-	java.lang.Throwable
-	    java.lang.Exception
-	    java.lang.RuntimeException
+		java.lang.Throwable
+		    java.lang.Exception
+		    java.lang.RuntimeException
 
-Erros da classe "java.lang.Exception" o compilador obriga a tratar ou propagar.
+	Erros da classe "java.lang.Exception" o compilador obriga a tratar ou propagar.
 
-Erros da classe "java.lang.RuntimeException" compilador não obriga a tratar ou propagar.
+	Erros da classe "java.lang.RuntimeException" compilador não obriga a tratar ou propagar.
 
-Quando lançada, uma exceção é propagada na pilha de chamadas de métodos em execução, até que seja capturada (tratada) ou o programa seja encerrado.
+	Quando lançada, uma exceção é propagada na pilha de chamadas de métodos em execução, até que seja capturada (tratada) ou o programa seja encerrado.
 
-Por que exceções?
+	Por que exceções?
 
-	O modelo de tratamento de exceções permite que erros sejam tratados de forma consistente e flexível, usando boas práticas.
+		O modelo de tratamento de exceções permite que erros sejam tratados de forma consistente e flexível, usando boas práticas.
 
-Vantagens:
+	Vantagens:
 
-	Delega a lógica do erro para a classe responsável por conhecer as regras que podem ocasionar o erro.
-	Trata de forma organizada (inclusive hierárquica) exceções de tipos diferentes.
-	A exceção pode carregar dados quaisquer.
-	Construtores podem ter tratamento de exceções.
-	Possibilidade de auxílio do compilador (Exception).
-	Código mais simples. Não há aninhamento de condicionais: a qualquer momento que uma exceção for disparada, a execução é interrompida e cai no bloco catch correspondente.
-	É possível capturar inclusive outras exceções de sistema.
+		Delega a lógica do erro para a classe responsável por conhecer as regras que podem ocasionar o erro.
+		Trata de forma organizada (inclusive hierárquica) exceções de tipos diferentes.
+		A exceção pode carregar dados quaisquer.
+		Construtores podem ter tratamento de exceções.
+		Possibilidade de auxílio do compilador (Exception).
+		Código mais simples. Não há aninhamento de condicionais: a qualquer momento que uma exceção for disparada, a execução é interrompida e cai no bloco catch correspondente.
+		É possível capturar inclusive outras exceções de sistema.
 
-Estrutura "try-catch"
+	Estrutura "try-catch"
 
-	O bloco "try" contém o código que representa a execução normal do trecho de código que pode acarretar em uma exceção.
+		O bloco "try" contém o código que representa a execução normal do trecho de código que pode acarretar em uma exceção.
 
-	O bloco "catch" contém o código a ser executado caso uma exceção ocorra, devendo ser especificado o tipo da exceção a ser tratada (upcasting é permitido).
+		O bloco "catch" contém o código a ser executado caso uma exceção ocorra, devendo ser especificado o tipo da exceção a ser tratada (upcasting é permitido).
 
-	Devemos ter somente um bloco "try" porem podemos ter diversos blocos "catch" associados, cada um capturando uma exceção diferente.
+		Devemos ter somente um bloco "try" porem podemos ter diversos blocos "catch" associados, cada um capturando uma exceção diferente.
 
-	Sintaxe:
+		Sintaxe:
 
-		try {
-			<codigo que pode disparar uma exceção>
+			try {
+				<codigo que pode disparar uma exceção>
+			}
+			catch (<tipo da exceção> e) {
+				<tratativa da exceção>
+			}
+			catch (<tipo da exceção> e) {
+				<tratativa da exceção>
+			}
+			catch (<tipo da exceção> e) {
+				<tratativa da exceção>
+			}
+			...
+
+	Bloco "finally"
+
+		É um bloco que contém código a ser executado independentemente de ter ocorrido ou não uma exceção, ele é sempre colocado ao final da estrutura try-catch.
+
+		Exemplo de uso: fechar um arquivo, conexão de banco de dados, ou outro recurso específico ao final do processamento.
+
+		Sintaxe:
+
+			try {
+				<codigo que pode disparar uma exceção>
+			}
+			catch (<tipo da exceção> e) {
+				<tratativa da exceção>
+			}
+			catch (<tipo da exceção> e) {
+				<tratativa da exceção>
+			}
+			catch (<tipo da exceção> e) {
+				<tratativa da exceção>
+			}
+			...
+			finally {
+				<código a ser executado independente do resultado das condições anteriores>
+			}
+
+	Pilha de chamadas de métodos
+
+		Ao ser lançada uma exceção ela mostra a pilha de chamada de métodos e encerra o programa, por exemplo:
+
+			java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 3
+			at application.Program.method2(Program.java:33)
+			at application.Program.method1(Program.java:19)
+			at application.Program.main(Program.java:11)
+
+		Vemos na sequencia inversa os métodos chamados que implicaram em erro:
+
+			at application.Program.method2(Program.java:33)
+			at application.Program.method1(Program.java:19)
+			at application.Program.main(Program.java:11)
+
+		Caso a exceção seja capturada, se quisermos podemos ver esta pilha de chamada de métodos, basta chamar o método abaixo na variável que capturou a exceção:
+
+			<variável>.printStackTrace();
+
+		Caso a exceção seja capturada, se quisermos podemos ver esta a mensagem de erro, basta chamar o método abaixo na variável que capturou a exceção:
+
+			<variável>.getMessage();
+
+	Cláusula "throws"
+
+		Propaga a exceção ao invés de tratá-la, é inserida na declaração do método que pode lançar a exceção, por exemplo:
+
+		<declaração do método> throws <exceção que pode ser lançada {
+			...
 		}
-		catch (<tipo da exceção> e) {
-			<tratativa da exceção>
-		}
-		catch (<tipo da exceção> e) {
-			<tratativa da exceção>
-		}
-		catch (<tipo da exceção> e) {
-			<tratativa da exceção>
-		}
-		...
 
-Bloco "finally"
-
-	É um bloco que contém código a ser executado independentemente de ter ocorrido ou não uma exceção, ele é sempre colocado ao final da estrutura try-catch.
-
-	Exemplo de uso: fechar um arquivo, conexão de banco de dados, ou outro recurso específico ao final do processamento.
-
-	Sintaxe:
-
-		try {
-			<codigo que pode disparar uma exceção>
-		}
-		catch (<tipo da exceção> e) {
-			<tratativa da exceção>
-		}
-		catch (<tipo da exceção> e) {
-			<tratativa da exceção>
-		}
-		catch (<tipo da exceção> e) {
-			<tratativa da exceção>
-		}
-		...
-		finally {
-			<código a ser executado independente do resultado das condições anteriores>
+		public void updateDates(Date checkIn, Date checkOut) throws DomainException {
+			...
 		}
 
-Pilha de chamadas de métodos
+	Cláusula "throw"
 
-	Ao ser lançada uma exceção ela mostra a pilha de chamada de métodos e encerra o programa, por exemplo:
+		Lança uma exceção, finalizando o método e devolvendo a exceção ao método que o chamou, por exemplo:
 
-		java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 3
-		at application.Program.method2(Program.java:33)
-		at application.Program.method1(Program.java:19)
-		at application.Program.main(Program.java:11)
+		throw new <nome da exceção>("<menagem de exceção>");
 
-	Vemos na sequencia inversa os métodos chamados que implicaram em erro:
+		throw new DomainException("Reservation dates for update must be future dates");
 
-		at application.Program.method2(Program.java:33)
-		at application.Program.method1(Program.java:19)
-		at application.Program.main(Program.java:11)
+	Criação de exceção personalizada
 
-	Caso a exceção seja capturada, se quisermos podemos ver esta pilha de chamada de métodos, basta chamar o método abaixo na variável que capturou a exceção:
+		Podemos criar nossas proprias exceções, para isso basta criar uma classe no pacote "model.exceptions".
 
-		<variável>.printStackTrace();
+		Esta classe deve receber a herança de uma classe de exceção, como "RuntimeException" ou "Exception".
 
-	Caso a exceção seja capturada, se quisermos podemos ver esta a mensagem de erro, basta chamar o método abaixo na variável que capturou a exceção:
+		Em corpo declaramos o "serialVersionUID".
 
-		<variável>.getMessage();
+		Em seguida criamos o construtor que recebe uma mensagem String e passa este parametro ao construtor da classe pai.
 
-Cláusula "throws"
+		Exemplo:
 
-	Propaga a exceção ao invés de tratá-la, é inserida na declaração do método que pode lançar a exceção, por exemplo:
+		package model.exceptions;
 
-	<declaração do método> throws <exceção que pode ser lançada {
-		...
-	}
+		public class <nome da exceção a ser criada> extends <nome da exceção que fornecera a herança> {
 
-	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
-		...
-	}
+			private static final long serialVersionUID = <valor>;
 
-Cláusula "throw"
-
-	Lança uma exceção, finalizando o método e devolvendo a exceção ao método que o chamou, por exemplo:
-
-	throw new <nome da exceção>("<menagem de exceção>");
-
-	throw new DomainException("Reservation dates for update must be future dates");
-
-Criação de exceção personalizada
-
-	Podemos criar nossas proprias exceções, para isso basta criar uma classe no pacote "model.exceptions".
-
-	Esta classe deve receber a herança de uma classe de exceção, como "RuntimeException" ou "Exception".
-
-	Em corpo declaramos o "serialVersionUID".
-
-	Em seguida criamos o construtor que recebe uma mensagem String e passa este parametro ao construtor da classe pai.
-
-	Exemplo:
-
-	package model.exceptions;
-
-	public class <nome da exceção a ser criada> extends <nome da exceção que fornecera a herança> {
-
-		private static final long serialVersionUID = <valor>;
-
-		public <nome da exceção a ser criada>(String message) {
-			super(message);
+			public <nome da exceção a ser criada>(String message) {
+				super(message);
+			}
+			
 		}
-		
-	}
 
-	Exemplo prático:
+		Exemplo prático:
 
-	package model.exceptions;
+		package model.exceptions;
 
-	public class DomainException extends RuntimeException {
+		public class DomainException extends RuntimeException {
 
-		private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
-		public DomainException(String message) {
-			super(message);
+			public DomainException(String message) {
+				super(message);
+			}
+			
 		}
-		
-	}
 
-	Apos a criação da exceção basta importar ela nas classes que forem utiliza-la e lançar a exceção com a clausula "throw".
+		Apos a criação da exceção basta importar ela nas classes que forem utiliza-la e lançar a exceção com a clausula "throw".
 
-	Por padrão as classes de exceção possuem a palavra "Exception" em senome, por exemplo "DomainException".
+		Por padrão as classes de exceção possuem a palavra "Exception" em seu nome, por exemplo "DomainException".
 
+- Trabalhando com arquivos e pastas
+
+	Arquivos
+
+		Para trabalhar com arquivos utilizamos a classe "File" que é uma abstração de um arquivo e seu caminho.
+
+		Declaração:
+
+			File <nome da variável> = new File(<caminho do arquivo>);
+
+			File file = new File("C:\\temp\\in.txt");
+
+			No caminho do arquivo devemos colocar barras duplas "\\" ao inves de barra simples "\" pois a barra é considerada um caractere de escape.
+
+		Lendo os dados do arquivo:
+
+			Criar um objeto Scanner como "null".
+
+			Em seguida instanciar o mesmo com a variavel "File" dentro de um bloco "try" devido a chance de lançar uma IOException.
+
+			Criar uma estrutura de repetição "while" para ler as linhas do arquivo.
+
+			Dentro da estrutura utilizar a linha lida no arquivo.
+
+			Capturar a exceção IOException.
+
+			No bloco finally fechar o objeto Scanner para liberar o arquivo.
+
+			Exemplo:
+
+			File file = new File("C:\\temp\\in.txt");
+			Scanner sc = null;
+			
+			try {
+				sc = new Scanner(file);
+				while (sc.hasNextLine()) {
+					System.out.println(sc.nextLine());
+				}
+			} catch (IOException e) {
+				System.out.println("Error: " + e.getMessage());
+			} finally {
+				if (sc != null) {
+					sc.close();
+				}
+			} 
