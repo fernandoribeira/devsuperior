@@ -2277,48 +2277,279 @@
 
 		Por padrão as classes de exceção possuem a palavra "Exception" em seu nome, por exemplo "DomainException".
 
-- Trabalhando com arquivos e pastas
+	Bloco "try-with-resources"
 
-	Arquivos
-
-		Para trabalhar com arquivos utilizamos a classe "File" que é uma abstração de um arquivo e seu caminho.
+		É um bloco try que declara um ou mais recursos, e garante que esses recursos serão fechados ao final do bloco, sem a necessidade de fechar em um blco finally.
 
 		Declaração:
 
-			File <nome da variável> = new File(<caminho do arquivo>);
-
-			File file = new File("C:\\temp\\in.txt");
-
-			No caminho do arquivo devemos colocar barras duplas "\\" ao inves de barra simples "\" pois a barra é considerada um caractere de escape.
-
-		Lendo os dados do arquivo:
-
-			Criar um objeto Scanner como "null".
-
-			Em seguida instanciar o mesmo com a variavel "File" dentro de um bloco "try" devido a chance de lançar uma IOException.
-
-			Criar uma estrutura de repetição "while" para ler as linhas do arquivo.
-
-			Dentro da estrutura utilizar a linha lida no arquivo.
-
-			Capturar a exceção IOException.
-
-			No bloco finally fechar o objeto Scanner para liberar o arquivo.
+			Ao criar o bloco "try" passar como parametros os objetos que devem ser fechados ao final do bloco.
 
 			Exemplo:
 
-			File file = new File("C:\\temp\\in.txt");
-			Scanner sc = null;
+			try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+			
+				String line = br.readLine();
+				
+				while (line != null) {
+					System.out.println(line);
+					line = br.readLine();
+				}
+				
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+
+		Desta forma evitamos criar um bloco finally que pode lançar exceções, por exemplo:
+
+		} finally {
 			
 			try {
-				sc = new Scanner(file);
-				while (sc.hasNextLine()) {
-					System.out.println(sc.nextLine());
+			
+				if (br != null) {
+					br.close();
+				}
+				if (fr != null) {
+					fr.close();
+				}
+			
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+
+- Trabalhando com arquivos e pastas
+
+	Para trabalhar com pastas e arquivos utilizamos a classe "File" que é uma abstração de uma pasta ou arquivo.
+
+	Gravação e leitura de arquivos
+
+		Lendo os dados do arquivo (com a classe BufferedReader e FileReader, alta performance):
+
+			Para trabalhar com a leitura de arquivos com uma performance maior utilizamos as classes FileReader (stream de leitura de arquivo) e BufferedReader (implementação de leitura de stream de arquivo com melhor performance).
+
+			Utilizamos o método "readLine()" da classe BufferedReader para ler uma linha do arquivo.
+
+			Como fazer:
+
+			Criar um objeto String com o caminho do arquivo.
+
+			Criar um objeto FileReader como "null".
+
+			Criar um objeto BufferedReader como "null".
+
+			Abrir um bloco "try".
+
+			Instanciar o FiledReader passando como parametro a variavel String com o caminho do arquivo.
+
+			Instanciar o BufferedReader passando como parametro o FileReader.
+
+			Criar uma variavel String para ler a primeira linha do arquivo com o método "readLine()" da classe BufferedReader.
+
+			Criar uma estrutura de repetição "while" para ler as linhas do arquivo.
+
+			Dentro da estrutura utilizar o método "readLine()" da classe BufferedReader para ler a proxima linha do arquivo.
+
+			Capturar a exceção IOException.
+
+			Criar um bloco finally.
+
+			Fechar os objetos FileReader e BufferdeReader para liberar o arquivo, porem dentro de outro bloco "try" pois podem lançar exceções.
+
+			Exemplo:
+
+			String path = "C:\\Temp\\in.txt";
+			FileReader fr = null;
+			BufferedReader br = null;
+			
+			try {
+				
+				fr = new FileReader(path);
+				br = new BufferedReader(fr);
+				
+				String line = br.readLine();
+				
+				while (line != null) {
+					System.out.println(line);
+					line = br.readLine();
+				}
+				
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				
+				try {
+				
+					if (br != null) {
+						br.close();
+					}
+					if (fr != null) {
+						fr.close();
+					}
+				
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+		Gravando os dados no arquivo (com a classe BufferedWriter e FileWriter, alta performance):
+
+			Para trabalhar com a gravação de arquivos com uma performance maior utilizamos as classes FileWriter (stream de gravação de arquivo) e BufferedWriter (implementação de gravação de stream de arquivo com melhor performance).
+
+			Utilizamos o método "writeLine()" da classe BufferedWriter para gravar uma linha do arquivo.
+
+			Temos duas opções de instanciação de um FileWriter:
+
+			Cria/recria o arquivo: new FileWriter(<caminho do arquivo>)
+			Acrescenta ao arquivo existente: new FileWriter(<caminho do arquivo>, true)
+
+			Como fazer:
+
+			Criar um objeto array de String com os dado a serem gravados.
+
+			Criar um objeto String com o caminho do arquivo que receberá os dados.
+
+			Criar um objeto FileWriter como "null".
+
+			Criar um objeto BufferedWriter como "null".
+
+			Abrir um bloco "try".
+
+			Instanciar o FiledWriter passando como parametro a variavel String com o caminho do arquivo.
+
+			Instanciar o BufferedWriter passando como parametro o FileReader.
+
+			Criar uma estrutura de repetição "for" para ler as linhas do do objeto String criado com os dados.
+
+			Dentro da estrutura gravar a linha lida no arquivo com o método "writeLine()" da classe BufferedWriter.
+
+			A gravação não efetua quebra de linha, sendo necessaria efetuar manualmente com o método "newLine()" da classe BufferedWriter.
+
+			Capturar a exceção IOException.
+
+			Criar um bloco finally.
+
+			Fechar os objetos FileWriter e BufferdeWriter para liberar o arquivo, porem dentro de outro bloco "try" pois podem lançar exceções.
+
+			Exemplo:
+
+			String[] lines = new String[] {"Bom dia", "Boa tarde", "Boa noite"};
+			String path = "C:\\temp\\out.txt";
+			FileWriter fw = null;
+			BufferedWriter bw = null;
+			
+			try {
+				
+				fw = new FileWriter(path, true);
+				bw = new BufferedWriter(fw);
+				
+				for (String line : lines) {
+					bw.write(line);
+					bw.newLine();
+				}
+				
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			} finally {
+				
+				try {
+				
+					if (bw != null) {
+						bw.close();
+					}
+					if (fw != null) {
+						fw.close();
+					}
+				
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+	Gravação e leitura de pastas
+
+		Listar pastas / arquivos
+
+			Para listar pastas e arquivos utilizamos a classe "File" que é uma abstração de uma pasta, especificamente seu método "listFiles()".
+
+			Para mostrar as pastas passamos o parametro "File::isDirectory" ao método.
+
+			Para mostrar os arquivos passamos o parametro "File::isFile" ao método.
+
+			Para mostrar os arquivos e pastas basta não passar nenhum parametro ao método.
+
+			Exemplo:
+
+				Scanner sc = new Scanner(System.in);
+		
+				System.out.print("Enter a folder path: ");
+				String folderPath = sc.nextLine();
+				
+				File path = new File(folderPath);
+				
+				File[] folders = path.listFiles(File::isDirectory);
+				System.out.println("Folders:");
+				for (File folder : folders) {
+					System.out.println(folder);
+				}
+
+				File[] files = path.listFiles(File::isFile);
+				System.out.println("Files:");
+				for (File file : files) {
+					System.out.println(file);
+				}
+				
+				File[] filesAndFolders = path.listFiles();
+				System.out.println("Files and folders:");
+				for (File item : filesAndFolders) {
+					System.out.println(item);
+				}
+
+		Criar pastas e arquivos
+
+			Para criar pastas e arquivos utilizamos a classe "File" que é uma abstração de uma pasta ou arquivo.
+
+			Para criação de arquivo utilizamos o método "createNewFile()" da classe BufferedWriter.
+
+			Para criação de arquivo utilizamos o método "mkdir()" da classe BufferedWriter.
+
+			Exemplos:
+
+			//Criando arquivo
+			String fileName = "NovoArquivo.txt";
+			File novoArquivo = new File(folderPath + "\\" + fileName);
+			try {
+				if (novoArquivo.createNewFile()) {
+					System.out.println("Arquivo criado com sucesso!");
+				} else {
+					System.out.println("Erro na criação do arquivo...");
 				}
 			} catch (IOException e) {
-				System.out.println("Error: " + e.getMessage());
-			} finally {
-				if (sc != null) {
-					sc.close();
-				}
-			} 
+				e.printStackTrace();
+			}
+		
+			// Criando pasta
+			String folderName = "NovaPasta";
+			File novaPasta = new File(folderPath + "\\" + folderName);
+			if (novaPasta.mkdir()) {
+				System.out.println("Pasta criada com sucesso!");
+			} else {
+				System.out.println("Erro na criação da pasta...");
+			}
+
+			A pasta ou arquivo será criado somente se não existir nenhum destes itens com o mesmo nome, caso existam eles não são criados, snedo assim não ocorre sobrescrita.
+
+	Métodos para arquivos
+
+		Caso seja instanciado um arquivo com a classe File podemso usar os métodos abaixo para coletar informações.
+
+		getName() - retorna o nome do arquivo
+		getParent() - retorna a pasta onde esta o arquivo
+		getPath() - retorna o caminho completo do arquivo
+
+- Interfaces
+
+		
