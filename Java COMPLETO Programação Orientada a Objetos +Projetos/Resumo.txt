@@ -1414,7 +1414,7 @@
 
 		Para formatação de datas utilizamos a classe "SimpleDateFormat", ela faz parte do pacote "java.text".
 
-		Desta forma para utilza-la devemos importar a classe da seguinte forma:
+		Desta forma para utiliza-la devemos importar a classe da seguinte forma:
 
 		import java.text.SimpleDateFormat;
 
@@ -2552,4 +2552,23 @@
 
 - Interfaces
 
-		
+Interface é um tipo que define um conjunto de operações que uma classe deve implementar, ela estabelece um "contrato" que a classe que a implementar deve cumprir, declarando os métodos pendentes.
+
+Na interface são declarados somente o cabeçalho dos métodos, a implementação fica  acargo das classes que a implementam.
+
+Por exemplo:
+
+interface <nome da interface> {
+	...
+	<tipo de retorno> <nome do método>();
+	...
+}
+
+interface Shape {
+	double area();
+	double perimeter();
+}
+
+Devemos utilizar interfaces para criar sistemas com baixo acoplamento e flexíveis.
+
+
