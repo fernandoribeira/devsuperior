@@ -2552,23 +2552,50 @@
 
 - Interfaces
 
-Interface é um tipo que define um conjunto de operações que uma classe deve implementar, ela estabelece um "contrato" que a classe que a implementar deve cumprir, declarando os métodos pendentes.
+	Interface é um tipo que define um conjunto de operações que uma classe deve implementar, ela estabelece um "contrato" que a classe que a implementar deve cumprir, declarando os métodos pendentes.
 
-Na interface são declarados somente o cabeçalho dos métodos, a implementação fica  acargo das classes que a implementam.
+	Na interface são declarados somente o cabeçalho dos métodos, a implementação fica  acargo das classes que a implementam.
 
-Por exemplo:
+	Por exemplo:
 
-interface <nome da interface> {
-	...
-	<tipo de retorno> <nome do método>();
-	...
-}
+	interface <nome da interface> {
+		...
+		<tipo de retorno> <nome do método>();
+		...
+	}
 
-interface Shape {
-	double area();
-	double perimeter();
-}
+	interface Shape {
+		double area();
+		double perimeter();
+	}
 
-Devemos utilizar interfaces para criar sistemas com baixo acoplamento e flexíveis.
+	Devemos utilizar interfaces para criar sistemas com baixo acoplamento e flexíveis.
 
+- Inversão de controle
+
+	Padrão de desenvolvimento que consiste em retirar da classe a responsabilidade de instanciar suas dependências.
+
+	Por exemplo:
+
+	Consideremos a instanciação de objeto abaixo.
+
+	carRental = new CarRental(pickupDate, returnDate, new Vehicle(carModel));
+
+	Passamos no construtor a instanciação de um objeto como parametro "new Vehicle(carModel)", removendo da classe "CarRental" a necessidade de instanciar o objeto em seu construtor.
+
+- Injeção de dependência
+
+	É uma forma de realizar a inversão de controle: um componente externo instancia a dependência, que é então injetada no objeto "pai". Pode ser implementada de várias formas:
+
+	Construtor
+	Classe de instanciação (builder / factory)
+	Container / framework
+
+	Por exemplo:
+
+	Consideremos a instanciação de objeto abaixo.
+
+	carRental = new CarRental(pickupDate, returnDate, new Vehicle(carModel));
+
+	Estamos injetando uma dependencia no construtor com "new Vehicle(carModel)".
 
