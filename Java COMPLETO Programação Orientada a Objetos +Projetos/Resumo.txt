@@ -904,7 +904,7 @@
 
 	Detalhes:
 
-	Inicialmente colocamos a descriçã]o "<<enum>>"
+	Inicialmente colocamos a descrição "<<enum>>"
 
 	O nome da enum é escrito em negrito e com alinhamento centralizado.
 
@@ -2598,4 +2598,25 @@
 	carRental = new CarRental(pickupDate, returnDate, new Vehicle(carModel));
 
 	Estamos injetando uma dependencia no construtor com "new Vehicle(carModel)".
+
+- Herdar vs cumprir contrato
+
+	Aspectos em comum entre herança e interfaces:
+
+	Relação é-um
+	Generalização/especialização
+	Polimorfismo
+
+	Diferença fundamental:
+
+	Herança > reuso
+	Interface > contrato a ser cumprido
+
+- Herança múltipla e o problema do diamante
+
+	A herança múltipla pode gerar o problema do diamante: uma ambiguidade causada pela existência do mesmo método em mais de uma superclasse.
+
+	Herança múltipla não é permitida na maioria das linguagens!
+
+	Herança múltipla não é permitida na linguagem Java.
 
