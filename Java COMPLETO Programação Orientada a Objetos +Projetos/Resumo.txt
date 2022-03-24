@@ -2708,3 +2708,84 @@
 
 	Um cuidado a ser tomado é que o método não ode usar nenhum tipo de variavel que seja de outra classe pois ele nao tem acesso, caso precise devemos utilizar declarar o método "get" na interface e sobrescrever na classe, conforme o exemplo.
 
+- Generics
+
+	Generics permitem que classes, interfaces e métodos possam ser parametrizados por tipo. Seus benefícios são:
+
+	Reuso
+	Type safety
+	Performance
+
+	Uso comum: coleções
+
+	Declaração:
+
+	<modificador de acesso> class <nome da classe><T> {
+		...
+	}
+
+	Em seguida em torno lugar que o parametro edve ser utilizado colocamos a leytra "T".
+
+	Exemplo:
+
+	package model.services;
+
+	import java.util.ArrayList;
+	import java.util.List;
+
+	public class PrintService<T> {
+
+		private List<T> list = new ArrayList<>();
+		
+		public void addValue(T value) {
+			list.add(value);
+		}
+		
+		public T first() {
+			if (list.isEmpty()) {
+				throw new IllegalStateException("List is empty");
+			}
+			return list.get(0);
+		}
+		
+		public void print() {
+			System.out.print("[");
+			if (!list.isEmpty()) {
+				System.out.print(list.get(0));
+			}
+			for (int i = 1; i < list.size(); i++) {
+				System.out.print(", " + list.get(i));
+			}
+			System.out.println("]");
+		}
+		
+	}
+
+- Genéricos delimitados
+
+	* Não foi explicado
+
+	Exemplo:
+
+		package services;
+
+		import java.util.List;
+
+		public class CalculationService {
+
+			public static <T extends Comparable<T>> T max(List<T> list) {
+				if (list.isEmpty()) {
+					throw new IllegalStateException("List can't be empty");
+				}
+				T max = list.get(0);
+				for (T item : list) {
+					if (item.compareTo(max) > 0) {
+						max = item;
+					}
+				}
+				return max;
+			}
+		}
+
+- Tipos curinga (wildcard types)
+
