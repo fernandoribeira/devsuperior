@@ -28,7 +28,6 @@ public class Program {
 				list.add(new Product(fields[0], Double.parseDouble(fields[1])));
 				line = br.readLine();
 			}
-			
 		} catch (FileNotFoundException e) {
 			System.out.println("Error: " + e.getMessage());
 		} catch (IOException e) {

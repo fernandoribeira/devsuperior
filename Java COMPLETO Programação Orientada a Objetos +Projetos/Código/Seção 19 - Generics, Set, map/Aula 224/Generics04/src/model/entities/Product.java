@@ -1,6 +1,6 @@
 package model.entities;
 
-public class Product implements Comparable <Product> {
+public class Product implements Comparable<Product> {
 
 	private String name;
 	private Double price;
