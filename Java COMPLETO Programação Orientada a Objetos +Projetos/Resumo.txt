@@ -2756,21 +2756,9 @@
 
 	Exemplo:
 
-		public class CalculationService {
-
-			public static <T extends Comparable<T>> T max(List<T> list) {
-				if (list.isEmpty()) {
-					throw new IllegalStateException("List can't be empty");
-				}
-				T max = list.get(0);
-				for (T item : list) {
-					if (item.compareTo(max) > 0) {
-						max = item;
-					}
-				}
-				return max;
-			}
-		}
+		public <T extends Number> void inspect(T t){
+			...
+    	}
 
 - Tipos curinga (wildcard types)
 
@@ -2830,4 +2818,106 @@
 
 		get - ERROR
 		put - OK
+
+- HashCode e Equals
+
+	São operações da classe Object utilizadas para comparar se um objeto é igual a outro.
+
+	equals: lento, resposta 100%
+	hashCode: rápido, porém resposta positiva não é 100%
+
+	Tipos comuns (String, Date, Integer, Double, etc.) já possuem a implementação para essas operações. Classes personalizadas precisam sobrepô-las.
+
+	Equals - compara se o objeto é igual a outro, retornando true ou false.
+
+	HashCode - retorna um número inteiro representando um código gerado a partir das informações do objeto, se o hashCode de dois objetos for diferente, então os dois objetos são
+	diferentes, se o hascode for igual dos dois objetos o ideal é validar em seguida com o equal.
+
+	Implementação
+
+	Todas as IDEs possuem um template de implementação dos métodos equals e hashcode, porem segue abaixo um exemplo:
+
+		Hashcode
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(<variavel ou variaveis que serão analisadas>);
+		}
+
+			@Override
+		public int hashCode() {
+			return Objects.hash(email, name);
+		}
+
+		Equals
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			<tipo> other = (<tipo>) obj;
+			return Objects.equals(<variavel ou variaveis que serão analisadas>) && Objects.equals(<variavel ou variaveis que serão analisadas>);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Client other = (Client) obj;
+			return Objects.equals(email, other.email) && Objects.equals(name, other.name);
+		}
+
+- Set<T>
+
+	O Set<T> é uma interface genérica que possue diversas implementações para uso, ele representa um conjunto de elementos (similar ao da Álgebra).
+
+	Detalhes:
+
+	Não admite repetições
+	Elementos não possuem posição
+	Acesso, inserção e remoção de elementos são rápidos
+	Oferece operações eficientes de conjunto: interseção, união, diferença.
+
+	Principais implementações:
+
+	HashSet - mais rápido (operações O(1) em tabela hash) e não ordenado
+	TreeSet - mais lento (operações O(log(n)) em árvore rubro-negra) e ordenado pelo compareTo do objeto (ou Comparator)
+	LinkedHashSet - velocidade intermediária e elementos na ordem em que são adicionados
+
+	Declaração:
+
+	Set<tipo do conjunto> <nome do conjunto> = new <tipo do Set><>();
+
+	Set<String> name = new HashSet<>();
+	Set<Integer> salary = new TreehSet<>();
+	Set<Product> product = new LinkedHashSet<>();
+
+	Métodos importantes
+
+	add(obj) - adiciona objeto ao conjunto
+	remove(obj) - remove objeto do conjunto
+	contains(obj) - verifica se o conjunto contém o objeto baseado em equals e hashCode, se equals e hashCode não existir, é usada comparação de ponteiros
+	clear() - esvazia  o conjunto
+	size() - mostra o tamanho do conjunto
+	removeIf(predicate) - remove do conjunto todos os itens que atendam ao predicado lambda
+	addAll(other) - união: adiciona no conjunto os elementos do outro conjunto, sem repetição
+	retainAll(other) - interseção: remove do conjunto os elementos não contitos em other
+	removeAll(other) - diferença: remove do conjunto os elementos contidos em other
+
+	Como HashSet testa igualdade?
+
+	Se hashCode e equals estiverem implementados: Primeiro hashCode. Se der igual, usa equals para confirmar.
+	Se hashCode e equals NÃO estiverem implementados: Compara as referências (ponteiros) dos objetos.
+
+	Como TreeSet testa igualdade?
+
+	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir est aimplementação será apreentado erro.
 
