@@ -2554,7 +2554,7 @@
 
 	Interface é um tipo que define um conjunto de operações que uma classe deve implementar, ela estabelece um "contrato" que a classe que a implementar deve cumprir, declarando os métodos pendentes.
 
-	Na interface são declarados somente o cabeçalho dos métodos, a implementação fica  acargo das classes que a implementam.
+	Na interface são declarados somente o cabeçalho dos métodos, a implementação fica a cargo das classes que a implementam.
 
 	Por exemplo:
 
@@ -2679,7 +2679,7 @@
 
 	Declaração:
 
-	Dentro da interface declarar o método completo ao inves de sua ssinatura somente, exemplo:
+	Dentro da interface declarar o método completo ao inves de sua assinatura somente, exemplo:
 
 	Antes:
 
@@ -2706,7 +2706,7 @@
 			
 		}
 
-	Um cuidado a ser tomado é que o método não ode usar nenhum tipo de variavel que seja de outra classe pois ele nao tem acesso, caso precise devemos utilizar declarar o método "get" na interface e sobrescrever na classe, conforme o exemplo.
+	Um cuidado a ser tomado é que o método não pode usar nenhum tipo de variavel que seja de outra classe pois ele nao tem acesso, caso precise devemos utilizar declarar o método "get" na interface e sobrescrever na classe, conforme o exemplo.
 
 - Generics
 
@@ -2830,8 +2830,7 @@
 
 	Equals - compara se o objeto é igual a outro, retornando true ou false.
 
-	HashCode - retorna um número inteiro representando um código gerado a partir das informações do objeto, se o hashCode de dois objetos for diferente, então os dois objetos são
-	diferentes, se o hascode for igual dos dois objetos o ideal é validar em seguida com o equal.
+	HashCode - retorna um número inteiro representando um código gerado a partir das informações do objeto, se o hashCode de dois objetos for diferente, então os dois objetos são diferentes, se o hascode for igual dos dois objetos o ideal é validar em seguida com o equal.
 
 	Implementação
 
@@ -2844,7 +2843,7 @@
 			return Objects.hash(<variavel ou variaveis que serão analisadas>);
 		}
 
-			@Override
+		@Override
 		public int hashCode() {
 			return Objects.hash(email, name);
 		}
@@ -2919,5 +2918,5 @@
 
 	Como TreeSet testa igualdade?
 
-	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir est aimplementação será apreentado erro.
+	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir est aimplementação será apresentado erro.
 
