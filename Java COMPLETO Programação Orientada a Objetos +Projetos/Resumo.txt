@@ -2832,7 +2832,7 @@
 
 	HashCode - retorna um número inteiro representando um código gerado a partir das informações do objeto, se o hashCode de dois objetos for diferente, então os dois objetos são diferentes, se o hascode for igual dos dois objetos o ideal é validar em seguida com o equal.
 
-	Implementação
+	Implementação:
 
 	Todas as IDEs possuem um template de implementação dos métodos equals e hashcode, porem segue abaixo um exemplo:
 
