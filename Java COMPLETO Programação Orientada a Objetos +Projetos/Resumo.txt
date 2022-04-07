@@ -1974,7 +1974,7 @@
 
 	Toda subclasse "é uma" superclasse, o contrario não se aplica.
 
-	Upcasting é a converção de um ojeto da subclasse para a superclasse, ela é feita de forma implicita pois toda subclasse "é uma" superclasse.
+	Upcasting é a conversão de um ojeto da subclasse para a superclasse, ela é feita de forma implicita pois toda subclasse "é uma" superclasse.
 
 	Exemplo:
 
