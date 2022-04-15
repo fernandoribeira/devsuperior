@@ -1670,7 +1670,7 @@
 
 		2 - Importar o projeto no programa editor
 
-		3 -  Altere o que você precisar no projeto
+		3 - Altere o que você precisar no projeto
 
 		4 - Commitar as mudanças feitas no projeto
 
@@ -2710,37 +2710,75 @@
 
 - Generics
 
-	Generics permitem que classes, interfaces e métodos possam ser parametrizados por tipo. Seus benefícios são:
+	Generics permitem que classes, interfaces e métodos possam ser parametrizados por tipo, desta forma podemos ter classes que trabalham com mais de um tipo, reduzindo a quantida de código no projeto.
+
+	Seus benefícios são:
 
 	Reuso
 	Type safety
 	Performance
 
-	Uso comum: coleções
+	O uso mais comum de generics é em listas.
 
 	Declaração de classe:
 
-	<modificador de acesso> class <nome da classe><T> {
-		...
-	}
-
-	Em seguida em todo lugar que o parametro deve ser utilizado colocamos a letra "T".
-
-	Exemplo:
-
-	public class PrintService<T> {
-
-		private List<T> list = new ArrayList<>();
-		
-		public void addValue(T value) {
-			list.add(value);
+		<modificador de acesso> class <nome da classe><T> {
+			...
 		}
-		
-		public T first() {
-			return list.get(0);
+
+		Em seguida em todo lugar que o parametro deve ser utilizado colocamos a letra "T".
+
+		Exemplo:
+
+		public class PrintService<T> {
+
+			private List<T> list = new ArrayList<>();
+			
+			public void addValue(T value) {
+				list.add(value);
+			}
+			
+			public T first() {
+				return list.get(0);
+			}
+			
 		}
-		
-	}
+
+	Declaração de classe com multiplos parametros de tipos genéricos:
+
+		Podemos utilizar a quantidade que quisermos de tipo generico, basta adicionar na declaração da classe separando por virgula, por exemplo:
+
+		<modificador de acesso> class <nome da classe><T, V> {
+			...
+		}
+
+	Declaração de método:
+
+		<modificador de acesso> <T> <tipo de retorno> <nome do método> (T <parametros>...) {
+			...
+		}
+
+		Inserimos "<T>" quando a classe não é declarada com tipo generico e sim padrão.
+
+	Declaração de método com mais de um tipo (multiplos):
+
+		Podemos utilizar a quantidade que quisermos de tipo generico, basta adicionar na declaração do método separando por virgula.
+
+		<modificador de acesso> <T, V> <tipo de retorno> <nome do método> (T <parametros>, V <parametros>...) {
+			...
+		}
+
+	Retornando tipos genericos em métodos:
+
+		Basta no tipo de retorno voce colocar a letra do tipo genérico, exemplo:
+
+		<modificador de acesso> <T> <tipo de retorno> <nome do método> (T <parametros>, V <parametros>...) {
+			...
+		}
+
+		public <T> T first(T item) {
+			return item;
+		}
 
 - Type Safety (segurança de tipos)
 
@@ -2760,9 +2798,19 @@
 			...
     	}
 
-- Tipos curinga (wildcard types)
+    Podemos delimitar por mais de um tipo utilizando o "&" na declaração da classe.
 
-	Generics são invariantes.
+    Exemplo:
+
+		public <T extends Number & Serializable> void inspect(T t){
+			...
+    	}
+
+- Tipos coringa (wildcard types)
+
+	O caractere de interrogação "?" é utilizado como coringa no caso de não soubermos o tipo a ser utilizado.
+
+	Exemplo:
 
 	List<Object> não é o supertipo de qualquer tipo de lista, por exemplo:
 
@@ -2770,23 +2818,33 @@
 	List<Integer> myNumbers = new ArrayList<Integer>();
 	myObjs = myNumbers; // Erro de compilação
 
-	O supertipo de qualquer tipo de lista é List<?>. Este é um tipo curinga:
+	O supertipo de qualquer tipo de lista é List<?> , este "?" é um tipo coringa, por exemplo:
 
 	List<?> myObjs = new ArrayList<Object>();
 	List<Integer> myNumbers = new ArrayList<Integer>();
 	myObjs = myNumbers;
 
-	Com tipos curinga podemos fazer métodos que recebem um genérico de "qualquer tipo", por exemplo:
+	Com tipos coringa podemos fazer métodos que recebem uma lista de tipo genérico, por exemplo:
 
 	public static void printList(List<?> list) {
-		for (Object obj : list) {
-			System.out.println(obj);
-		}
+		...
 	}
 
-	Porém não é possível adicionar dados a uma coleção de tipo curinga ja que o compilador não sabe se o tipo a ser adicionado é o tipo da lista.
+	Porem não podemos inserir nenhum item em uma lista criada a partir da caractere coringa pois o compilador não sabe se o tipo é compativel, exemplo:
 
-- Curingas delimitados (bounded wildcards)
+	public static void printList(List<?> list) {
+		list.add(3); // Erro de compilação pois não se a lista aceita um inteiro
+	}
+
+- Coringas delimitados (bounded wildcards)
+
+	Segue o mesmo principio dos genéricos delimitados porém aplicados ao tipo coringa.
+
+	Para declarar um tipo coringa de tipo limitado, coloque o tipo coringa seguido pela palavra "extends", seguida por seu limite superior, por exemplo:
+
+	public static void printList(List<? extends Number> list) {
+		...
+	}
 
 	Princípio get/put - covariância
 
@@ -2920,4 +2978,3 @@
 
 	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir est aimplementação será apresentado erro.
 
-- Revisando
