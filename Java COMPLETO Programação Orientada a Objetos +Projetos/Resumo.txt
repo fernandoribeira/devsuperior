@@ -2788,13 +2788,21 @@
 
 - Genéricos delimitados (parâmetros de tipo limitado)
 
-	Pode haver momentos em que você deseja restringir os tipos que podem ser usados como argumentos de tipo em um tipo parametrizado. Por exemplo, um método que opera em números pode querer apenas aceitar instâncias de Number suas subclasses. É para isso que servem os parâmetros de tipo limitado.
+	Pode haver momentos em que você deseja restringir os tipos que podem ser usados como argumentos de tipo em um tipo parametrizado. Por exemplo, um método que opera em números pode querer apenas aceitar instâncias de Number suas subclasses ou aceitar instâncias de Number suas superclasses. É para isso que servem os parâmetros de tipo limitado.
 
-	Para declarar um parâmetro de tipo limitado, liste o nome do parâmetro de tipo, seguido pela palavra "extends", seguida por seu limite superior , que neste exemplo é Number. Observe que, neste contexto, extends é usado em um sentido geral para significar "extends" (como em classes) ou "implements" (como em interfaces).
+	Para declarar um parâmetro de tipo limitado em subclasses, liste o nome do parâmetro de tipo, seguido pela palavra "extends", seguida por seu limite superior , que neste exemplo é Number.
 
 	Exemplo:
 
 		public <T extends Number> void inspect(T t){
+			...
+    	}
+
+    Para declarar um parâmetro de tipo limitado em superclasses, liste o nome do parâmetro de tipo, seguido pela palavra "super", seguida por seu limite inferior , que neste exemplo é Number.
+
+	Exemplo:
+
+		public <T super Number> void inspect(T t){
 			...
     	}
 
@@ -2840,13 +2848,23 @@
 
 	Segue o mesmo principio dos genéricos delimitados porém aplicados ao tipo coringa.
 
-	Para declarar um tipo coringa de tipo limitado, coloque o tipo coringa seguido pela palavra "extends", seguida por seu limite superior, por exemplo:
+	Para declarar um tipo coringa de tipo limitado por subclasse, coloque o tipo coringa seguido pela palavra "extends", seguida por seu limite superior, por exemplo:
 
 	public static void printList(List<? extends Number> list) {
 		...
 	}
 
-	Princípio get/put - covariância
+	Para declarar um tipo coringa de tipo limitado por superclasse, coloque o tipo coringa seguido pela palavra "super", seguida por seu limite inferior, por exemplo:
+
+	public static void printList(List<? super Number> list) {
+		...
+	}
+
+- Princípio get/put
+
+	Covariância
+
+		É quando a operação de leitura de itens da lista é permitida porém de inserção de itens na lista não é permitida. Isso ocorre ao declarar uma lista de um tipo coringa com delimitador de subclasse, por exemplo:
 
 		List<Integer> intList = new ArrayList<Integer>();
 		intList.add(10);
@@ -2856,12 +2874,11 @@
 
 		Number x = list.get(0);
 
-		list.add(20); // Erro de compilacao
+		list.add(20); // Erro de compilacao pois não sabe se o valor que esta tentando adicionar é compativel com o tipo da lista
 
-		get - OK
-		put - ERROR
+	Contravariância
 
-	Princípio get/put - contravariância
+		É quando a operação de leitura de itens da lista não é permitida porém de inserção de itens na lista é permitida. Isso ocorre ao declarar uma lista de um tipo coringa com delimitador de superclasse, por exemplo:
 
 		List<Object> myObjs = new ArrayList<Object>();
 		myObjs.add("Maria");
@@ -2872,10 +2889,7 @@
 		myNums.add(10);
 		myNums.add(3.14);
 
-		Number x = myNums.get(0); // erro de compilacao
-
-		get - ERROR
-		put - OK
+		Number x = myNums.get(0); // Erro de compilacao pois não sabe se o valor que esta tentando pegar é compativel com o tipo da variavel
 
 - HashCode e Equals
 
@@ -2957,7 +2971,7 @@
 	Set<Integer> salary = new TreehSet<>();
 	Set<Product> product = new LinkedHashSet<>();
 
-	Métodos importantes
+	Métodos importantes:
 
 	add(obj) - adiciona objeto ao conjunto
 	remove(obj) - remove objeto do conjunto
@@ -2976,5 +2990,49 @@
 
 	Como TreeSet testa igualdade?
 
-	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir est aimplementação será apresentado erro.
+	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir esta implementação será apresentado erro.
+
+- Map<K,V>
+
+	O Map<K,V> é uma interface genérica que possue diversas implementações para uso, ele representa um conjunto de elementos de pares chave / valor.
+
+	Detalhes:
+
+	Não admite repetições do objeto chave
+	Os elementos são indexados pelo objeto chave (não possuem posição)
+	Acesso, inserção e remoção de elementos são rápidos
+
+	Principais implementações:
+
+	HashMap - mais rápido (operações O(1) em tabela hash) e não ordenado
+	TreeMap - mais lento (operações O(log(n)) em árvore rubro-negra) e ordenado pelo compareTo do objeto (ou Comparator)
+	LinkedHashMap - velocidade intermediária e elementos na ordem em que são adicionados
+
+	Declaração:
+
+	Map<<tipo da chave>, <tipo do valor>> <nome do conjunto>  = new <tipo do Map<>();
+
+	Map<Integer, String> name = new HashMap<>();
+	Map<Integer, Integer> salary = new TreehMap<>();
+	Map<Integer, Product> product = new LinkedHashMap<>();
+
+	Métodos importantes:
+
+	put(key, value) - adiciona objeto ao conjunto
+	remove(key) - remove objeto do conjunto
+	containsKey(key) - verifica se o conjunto contém o objeto baseado em equals e hashCode, se equals e hashCode não existir, é usada comparação de ponteiros
+	get(key) - retirna um objeto do conjunto
+	clear() - esvazia  o conjunto
+	size() - mostra o tamanho do conjunto
+	keySet() - retorna um Set<key>
+	values() - retorna um Collection<value>
+
+	Como HashSet testa igualdade?
+
+	Se hashCode e equals estiverem implementados: Primeiro hashCode. Se der igual, usa equals para confirmar.
+	Se hashCode e equals NÃO estiverem implementados: Compara as referências (ponteiros) dos objetos.
+
+	Como TreeSet testa igualdade?
+
+	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir esta implementação será apresentado erro.
 
