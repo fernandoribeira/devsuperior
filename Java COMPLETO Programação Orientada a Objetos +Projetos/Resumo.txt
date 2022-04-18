@@ -3036,3 +3036,127 @@
 
 	É utilizado o método "compareTo" da interface "Comparable", se classe não possuir esta implementação será apresentado erro.
 
+- Comparator
+
+	Uma ordenação de lista pode ser feita pelo método estatico "Collections.sort(<lista a ser ordenada>);" , porém par aisso devemos implementar a interface "Comparable" nas classes a serem ordenadas.
+
+	Implementar uma interface "Comparable" em uma classe não é recomendado, pois para alterar os parametros de comparação deveremos alterar uma classe ja fechada para alterações, dificultando o processo e gerando possiveis falhas.
+
+	Como solução podemos criar uma classe de comparação que implementa a interface "Comparator" removendo assim a lógica de comparação da classe, mantendo-a fechada.
+
+	Para ordenar a lista podemos então utilizar o método "<lista a ser ordenada>.sort(<comparator>)" do proprio objeto da lista, esse método recebe como argumento um objeto Comparator.
+
+	Temos diversas formas de utilizar o Comparator.
+
+	Comparator objeto de classe separada:
+
+		Para isso criamos uma classe separada que implementa a classe Comparator e sobrescreve o método "compare", exemplo abaixo:
+
+			package application;
+
+			import java.util.Comparator;
+
+			import model.entities.Product;
+
+			public class MyComparator implements Comparator<Product> {
+
+				@Override
+				public int compare(Product p1, Product p2) {
+					return p1.getName().toUpperCase().compareTo(p2.getName().toUpperCase());
+				}
+
+			}
+
+		Em seguida chamamos o método "sort" da lista a ser ordenada passando um objeto da nossa classe Comparator como argumento, exemplo abaixo:
+
+			list.sort(new MyComparator());
+
+	Comparator objeto de classe anônima:
+
+		Ao invés de criarmos uma classe "normal" podemos criar uma classe anônima para otimizar código, exemplo abaixo:
+
+			Comparator<Product> comp = new Comparator<Product>() {
+				@Override
+				public int compare(Product p1, Product p2) {
+					return p1.getName().toUpperCase().compareTo(p2.getName().toUpperCase());
+				}
+			};
+
+		Ela traz a implementação do Comparator direto na declaração da variável.
+
+		Em seguida chamamos o método "sort" da lista a ser ordenada passando o objeto da nossa classe anônima Comparator como argumento, exemplo abaixo:
+
+			list.sort(comp);
+
+	Comparator objeto de expressão lambda com chaves:
+
+		Para maior otimização, ao invés de utilizar uma classe anônima podemos utilizar um método anônimo no formato de expressão lambda (com chaves), exemplo abaixo:
+
+			Comparator<Product> comp = (p1, p2) -> {
+				return p1.getName().toUpperCase().compareTo(p2.getName().toUpperCase());
+			};
+
+		No campo dos parênteses temos os argumentos, em seguida temos a flecha (arrow), a abertura de chaves, e por fim o que será executado no método, com a chave de fechamento.
+
+		Em seguida chamamos o método "sort" da lista a ser ordenada passando o objeto da nossa classe anônima Comparator como argumento, exemplo abaixo:
+
+			list.sort(comp);
+
+	Comparator objeto de expressão lambda sem chaves:
+
+		Similar a expressão lambda com chaves, mas para maior otimização ainda, quando temos uma expressão lambda de somente uma linha podemos descartar as chaves de abertura e fechamento e a palavra return, exemplo abaixo:
+
+			Comparator<Product> comp = (p1, p2) -> p1.getName().toUpperCase().compareTo(p2.getName().toUpperCase());
+
+		Em seguida chamamos o método "sort" da lista a ser ordenada passando o objeto da nossa classe anônima Comparator como argumento, exemplo abaixo:
+
+			list.sort(comp);
+
+	Comparator expressão lambda "direto no argumento":
+
+		Por fim podemos otimizar de forma maior evitando a declaração da variável e inserindo a expressão lambda direto como argumento do método sorte, exemplo abaixo:
+
+			list.sort((p1, p2) -> p1.getName().toUpperCase().compareTo(p2.getName().toUpperCase()));
+
+- Programação funcional e cálculo lambda
+
+	Temos diversos paradigmas de programação:
+
+	Imperativo (C, Pascal, Fortran, Cobol)
+	Orientado a objetos (C++, Object Pascal, Java (< 8), C# (< 3))
+	Funcional (Haskell, Closure, Clean, Erlang)
+	Lógico (Prolog)
+	Multiparadigma (JavaScript, Java (8+), C# (3+), Ruby, Python, Go)
+
+	O paradigma funcional de programação é baseado no formalismo matemático Cálculo Lambda.
+
+	Tabela de comparação dos paradigmas imperativo e funcional:
+
+														Programação Imperativa 					Programação Funcional
+
+	Como se descreve algo a ser computado 				comandos ("como" - imperativa) 			expressões ("o quê" - declarativa)
+	Funções possuem transparência referencial 			fraco 									forte
+	(ausência de efeitos colaterais)
+	Objetos imutáveis 									raro 									comum
+	Funções são objetos de primeira ordem 				não 									sim
+	Expressividade / código conciso 					baixa 									alta
+	Tipagem dinâmica / inferência de tipos 				raro 									comum
+
+	Detalhes
+
+	Transparência referencial - uma função possui transparência referencial se seu resultado for sempre o mesmo para os mesmos dados de entrada. Benefícios: simplicidade e previsibilidade.
+
+	Funções são objetos de primeira ordem (ou primeira classe) - isso significa que funções podem, por exemplo, serem passadas como parâmetros de métodos, bem como retornadas como resultado de métodos.
+
+	Tipagem dinâmica / inferência de tipos - reconhecimento automático de tipos.
+
+	Expressividade / código conciso - código simples, em uma linha somente, bem claro.
+
+- Expressões lambda
+
+	Em programação funcional, expressão lambda corresponde a uma função anônima de primeira classe.
+
+	Exemplo:
+
+	list.sort((p1, p2) -> p1.getPrice().compareTo(p2.getPrice()));
+
