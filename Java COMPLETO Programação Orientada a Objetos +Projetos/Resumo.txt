@@ -3160,3 +3160,100 @@
 
 	list.sort((p1, p2) -> p1.getPrice().compareTo(p2.getPrice()));
 
+- Interface funcional
+
+	É uma interface que possui um único método abstrato. Suas implementações serão tratadas como expressões lambda.
+
+	Um exemplo é a interface "Comparator".
+
+	Algumas outras interfaces funcionais comuns:
+
+	Predicate
+	Function
+	Consumer
+
+- Predicate (exemplo com removeIf)
+
+	Interface funcional com o método abstrato abaixo:
+
+	public interface Predicate<T> {
+		boolean test (T t);
+	}
+
+	Serve para testar algo e devolver um booleano.
+
+	Pode ser implementada de diversas formas:
+
+	Implementação da interface
+
+		Criar uma classe separada que implementa a interface Predicate e declarar o método abstrato conforme exemplo abaixo:
+
+			public class ProductPredicate implements Predicate<Product> {
+				@Override
+				public boolean test(Product p) {
+					return p.getPrice() >= 100.0;
+				}
+			}
+
+		Para utilizar instanciamos um objeto desta classe e passamos como argumento para o método RemoveIf conforme exemplo abaixo:
+
+			list.removeIf(new ProductPredicate());
+
+	Reference method com método estático
+
+		Não criar a classe separada e sim um método estatico na classe alvo conforme exemplo abaixo:
+
+			public static boolean staticProductPredicate(Product p) {
+				return p.getPrice() >= 100.0;
+			}
+
+		Para utilizar chamamos o método da classe diretamente no parametro do método RemoveIf conforme exemplo abaixo:
+
+			list.removeIf(Product::staticProductPredicate);
+
+	Reference method com método não estático
+
+		Não criar a classe separada e sim um método não estatico na classe alvo conforme exemplo abaixo:
+
+			public boolean nonStaticProductPredicate() {
+				return price >= 100.0;
+			}
+
+		Para utilizar chamamos o método da classe diretamente no parametro do método RemoveIf conforme exemplo abaixo:
+
+			list.removeIf(Product::nonStaticProductPredicate)
+
+	Expressão lambda declarada
+
+		Criar uma variavel Predicate com a expressão lambda conforme exemplo abaixo:
+
+			Predicate<Product> pred = p -> p.getPrice() >= 100.0;
+
+		Para utilizar passamos essa variavel criada como parametro do método RemoveIf conforme exemplo abaixo:
+
+			list.removeIf(pred);
+
+	Expressão lambda inline
+
+		Podemos passar diretamente a exmpressão lambda como parametro do método RemoveIf conforme exemplo abaixo:
+
+			list.removeIf(p -> p.getPrice() >= 100.0);
+
+- Consumer (exemplo com forEach)
+
+	Interface funcional com o método abstrato abaixo:
+
+	public interface Consumer<T> {
+		void accept(T t);
+	}
+
+	Serve para executar uma ação e não retornar nada.
+
+	Pode ser implementada de diversas formas, todas similares ao Predicate:
+
+	Implementação da interface
+	Reference method com método estático
+	Reference method com método não estático
+	Expressão lambda declarada
+	Expressão lambda inline
+
