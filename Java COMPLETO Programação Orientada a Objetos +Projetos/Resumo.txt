@@ -3257,3 +3257,88 @@
 	Expressão lambda declarada
 	Expressão lambda inline
 
+- Function (exemplo com map)
+
+	A função "map" (não confunda com a estrutura de dados Map) é uma função que aplica uma função a todos elementos de uma stream.
+
+	Conversões:
+
+	List para stream: .stream()
+	Stream para List: .collect(Collectors.toList())
+
+	Interface funcional com o método abstrato abaixo:
+
+	public interface Function<T, R> {
+		R apply(T t);
+	}
+
+	Server para receber um objeto qualquer, extrair dados do mesmo e devolver essas informações em outro objeto.
+
+	Pode ser implementada de diversas formas:
+
+	Implementação da interface
+
+		Criar uma classe separada que implementa a interface Function e declarar o método abstrato conforme exemplo abaixo:
+
+			public class UpperCaseName implements Function<Product, String> {
+				@Override
+				public String apply(Product p) {
+					return p.getName().toUpperCase();
+				}
+			}
+
+		Para utilizar instanciamos um objeto de lista do tipo de retorno, usamos um stream e em seguida a função "map" que utiliza o objeto function, ao final utilizamos o collect para devolver a lista conforme exemplo abaixo:
+
+			List<String> names = list.stream().map(new UpperCaseName()).collect(Collectors.toList());
+
+	Reference method com método estático
+
+		Não criar a classe separada e sim um método estatico na classe alvo conforme exemplo abaixo:
+
+				public static String staticUpperCaseName(Product p) {
+					return p.getName().toUpperCase();
+				}
+	
+		Para utilizar chamamos o método da classe diretamente no parametro do método "map" conforme exemplo abaixo:
+
+			List<String> names = list.stream().map(Product::staticUpperCaseName).collect(Collectors.toList());
+
+	Reference method com método não estático
+
+		Não criar a classe separada e sim um método não estatico na classe alvo conforme exemplo abaixo:
+
+			public String nonStaticUpperCaseName() {
+				return name.toUpperCase();
+			}
+
+		Para utilizar chamamos o método da classe diretamente no parametro do método Map conforme exemplo abaixo:
+
+			List<String> names = list.stream().map(Product::nonStaticUpperCaseName).collect(Collectors.toList());
+
+	Expressão lambda declarada
+
+		Criar uma variavel Function com a expressão lambda conforme exemplo abaixo:
+
+			Function<Product, String> func = p -> p.getName().toUpperCase();
+
+		Para utilizar passamos essa variavel criada como parametro do método Map conforme exemplo abaixo:
+
+			List<String> names = list.stream().map(func).collect(Collectors.toList());
+
+	Expressão lambda inline
+
+		Podemos passar diretamente a exmpressão lambda como parametro do método Map conforme exemplo abaixo:
+
+			List<String> names = list.stream().map(p -> p.getName().toUpperCase()).collect(Collectors.toList());
+
+- Criando funções que recebem funções (interface funcional) como argumento
+
+	Nos argumentos do método inserimos um objeto da interface funcional, exemplo abaixo:
+
+		public double filteredSum(List<Product> list, Predicate<Product> criteria) {
+			...
+
+	Ao chamar este método passamos a expressão lambda como parâmetro, exemplo abaixo:
+
+		double sum = ps.filteredSum(list, p -> p.getName().charAt(0) == 'T');
+
