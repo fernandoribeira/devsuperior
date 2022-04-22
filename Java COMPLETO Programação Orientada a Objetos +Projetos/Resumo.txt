@@ -400,7 +400,7 @@
 
 - Funções matemáticas
 
-	Existem algumas fucções já pré-definidas em Java, elas fazem parte da classe "Math", seguem exemplos:
+	Existem algumas funções já pré-definidas em Java, elas fazem parte da classe "Math", seguem exemplos:
 
 	Exemplo 								Significado
 
@@ -3459,52 +3459,21 @@
 		.collect(Collectors.toList());
 	System.out.println(Arrays.toString(newList.toArray()));
 
+- Declaração basica de serialização
+
+	Declarar conforme padrão abaixo:
+
+	private static final long serialVersionUID = 1L;
+
 - JDBC (Java Database Connectivity)
 
 	O JDBC é a API padrão do Java para acesso a banco de dados.
 
 	Voce programa na aplicação java voltado para o JDBC, utilizando seus métodos, independente do banco de dados utilizado.
 
-	Depois, utilizando um driver especifico para o banco de dados desejado, o programa se comunica com o banco de dados.
+	Depois, utilizando um driver (connector) especifico para o banco de dados desejado, o programa se comunica com o banco de dados.
 
-	Sendo assim voce programa de uma so forma o acesso a dados e os drivers se encarregam e traduzir para cada banco.
-
-	Pacotes: java.sql e javax.sql (API suplementar para servidores)
-
-- Algebra relacional
-
-	Operações básicas:
-
-	Produto cartesiano - busca todos os dados das tabelas selecionadas, trazendo como resultado o cruzamento de todos os dados da tabela, trazendo todos os dados, sem restrição, por exemplo:
-
-		SELECT *
-		FROM PRODUCT, CATEGORY
-
-	Junção - é um produto cartesiano com restrição de chave estrangeira com chave primária, por exemplo:
-
-		SELECT *
-		FROM PRODUCT, CATEGORY
-		WHERE
-			PRODUCT.CATEGORY_ID = CATEGORY.ID
-
-	Restrição - é similar a junção porem com maiores restrições, por exemplo:
-
-		SELECT *
-		FROM PRODUCT, CATEGORY
-		WHERE
-			PRODUCT.CATEGORY_ID = CATEGORY.ID AND CATEGORY.NAME = 'Computers'
-
-	Projeção - seleciona somente os campos desejados, por exemplo:
-
-		SELECT PRODUCT.*, CATEGORY.NAME
-		FROM PRODUCT, CATEGORY
-		WHERE
-			PRODUCT.CATEGORY_ID = CATEGORY.ID AND CATEGORY.NAME = 'Computers'
-
-- Comandos SQL
-
-	Criar database: create database <nome da database>;
-	Selecionar banco de dados: use <nome da database>;
+	Sendo assim voce programa de uma so forma o acesso a dados e os drivers se encarregam de traduzir para cada banco.
 
 - Conectar Java ao MySQL
 
@@ -3522,35 +3491,63 @@
 
 	Ao criar um novo projeto no Eclipse, na segunda tela (Java Settings), clicar na aba "Libraries", clicar no "Modulepath", clicar em "Add library", selecionar "User Library" e adicinonar nossa biblioteca criada.
 
+	Inicialmente temos de passar os dados de conexão com o banco.
+
 	Na pasta raiz do projeto, criar um arquivo "db.properties" contendo os dados de conexão:
 
 	user=<nome do usuário>
 	password=<senha>
-	dburl=jdbc:mysql://localhost:3306/<nome da database>
+	dburl=jdbc:<caminho da database>
 	useSSL=false
 
-	Criar um pacote "db" no projeto.
+	Exemplo:
 
-	Criar uma exceção personalizada "DbException" no pacote "db" com o seguinte conteúdo:
+	user=developer
+	password=01Admin10!
+	dburl=jdbc:mysql://localhost:3306/coursejdbc
+	useSSL=false
 
-		package db;
+	Devemos criar classes de utilitarios de database para auxiliar no uso do banco de dados.
 
-		public class DbException extends RuntimeException {
+	Criar um pacote "exception" no projeto.
+
+	Criar uma exceção personalizada "DbStandardException" no pacote "exception" com o seguinte conteúdo:
+
+		package exception;
+
+		public class DbStandardException extends RuntimeException {
 
 			private static final long serialVersionUID = 1L;
 
-			public DbException(String message) {
+			public DbStandardException(String message) {
 				super(message);
 			}
 			
 		}
 
-	Ainda no pacote "db", criar uma classe DB com métodos estáticos auxiliares para obter e fechar uma conexão, statement e resultset com o banco com o seguinte conteúdo:
+	Esta classe de exceção personalizada herda de "RuntimeException", desta forma não precisa de tratativa, podemos então lançar esta exceção para cada catch de SQLException, exceto em delete no banco de dados.
+
+	Criar uma exceção personalizada "DbIntegrityException" no pacote "exception" com o seguinte conteúdo:
+
+		package exception;
+
+		public class DbIntegrityException extends RuntimeException {
+
+			private static final long serialVersionUID = 1L;
+
+			public DbIntegrityException(String message) {
+				super(message);
+			}
+			
+		}
+
+	Esta classe de exceção personalizada herda de "RuntimeException", desta forma não precisa de tratativa, podemos então lançar esta exceção para catch de SQLException em operações de delete, assim visualizamos de forma mais clara quando ocorrer uma falha relacionada a integridade do banco.
+
+	Agora criar um pacote "db", criar uma classe Db com métodos estáticos auxiliares para obter e fechar uma conexão, statement e resultset com o banco com o seguinte conteúdo:
 
 		package db;
 
 		import java.io.FileInputStream;
-		import java.io.FileNotFoundException;
 		import java.io.IOException;
 		import java.sql.Connection;
 		import java.sql.DriverManager;
@@ -3559,18 +3556,20 @@
 		import java.sql.Statement;
 		import java.util.Properties;
 
-		public class DB {
+		import exception.DbStandardException;
+
+		public class Db {
 			
 			private static Connection conn = null;
 			
-			public static Connection getConnection() {
+			public static Connection openConnection() {
 				if (conn == null) {
 					try {
-						Properties properties = loadProperties();
+						Properties properties = loadProperties("db.properties");
 						String url = properties.getProperty("dburl");
 						conn = DriverManager.getConnection(url, properties);
 					} catch (SQLException e) {
-						throw new DbException(e.getMessage());
+						throw new DbStandardException(e.getMessage());
 					}
 				}
 				return conn;
@@ -3581,7 +3580,7 @@
 					try {
 						conn.close();
 					} catch (SQLException e) {
-						throw new DbException(e.getMessage());
+						throw new DbStandardException(e.getMessage());
 					}
 				}
 			}
@@ -3591,7 +3590,7 @@
 					try {
 						st.close();
 					} catch (SQLException e) {
-						throw new DbException(e.getMessage());
+						throw new DbStandardException(e.getMessage());
 					}
 				}
 			}
@@ -3601,108 +3600,104 @@
 					try {
 						rs.close();
 					} catch (SQLException e) {
-						throw new DbException(e.getMessage());
+						throw new DbStandardException(e.getMessage());
 					}
 				}
 			}
-			
-			private static Properties loadProperties() {
-				try (FileInputStream file = new FileInputStream("db.properties")) {
+
+			private static Properties loadProperties(String path) {
+				try (FileInputStream file = new FileInputStream(path)) {
 					Properties properties = new Properties();
 					properties.load(file);
 					return properties;
-				} catch (FileNotFoundException e) {
-					throw new DbException(e.getMessage());
 				} catch (IOException e) {
-					throw new DbException(e.getMessage());
+					throw new DbStandardException(e.getMessage());
 				}
 			}
-			
+
 		}
 
-
-	Detalhes:
-
-	É criada uma classe de exceção personalizada que herda de "RuntimeException", desta forma não precisa de tratativa.
-
-	A classe "DB" possui métodos para criação da conexão com o banco, encerramento da conexão com o banco, encerramento do objeto de statement, encerramento do objeto de resultset e um método para carregamento das propriedades do arquivo de conexão com o banco de dados.
+	A classe "Db" possui métodos para abertura da conexão com o banco, encerramento da conexão com o banco, encerramento do objeto de statement, encerramento do objeto de resultset e um método para carregamento das propriedades do arquivo de conexão com o banco de dados.
 
 - Conexão com o banco de dados
 
-	É necessária a criação de uma conexão, um statement e um resultset, todos inicalizados com "null".
+	É necessária a criação de um objeto Conenction para estabelecer uma conexão e acessar o banco de dados.
 
-	Em seguida criamos um bloco "try- catch - finally" que inicializa essas variaveis, executa a consulta e retorna os resultados, trata as exceções e encerra a conexão, o statement e o resultset.
+	Declaramos então esta variavel com valor nulo:
 
-	Exemplo de código:
+	Connection conn = null;
 
-		package application;
-
-		import java.sql.Connection;
-		import java.sql.ResultSet;
-		import java.sql.Statement;
-
-		import db.DB;
-
-		public class Program {
-			public static void main(String[] args) {
-				
-				Connection conn = null;
-				Statement st = null;
-				ResultSet rs = null;
-				
-				try {
-					conn = DB.getConnection();
-					st = conn.createStatement();
-					rs = st.executeQuery("SELECT * FROM DEPARTMENT");
-					while (rs.next()) {
-						System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
-					}
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-				} finally {
-					DB.closeResultSet(rs);
-					DB.closeStatement(st);
-					DB.closeConnection();
-				}
-			}
-		}
-
-	Detalhes:
-
-	É criado um objeto "conn" tipo Connection para a conexão.
-	
-	É obrigatório criamos um bloco "try- catch - finally" pois como acesso ao banco é um recurso externo existe a possibilidade de erros ocorrerem.
-
-- JDBC Recuperação de dados
-
-	APIs utilizadas:
-
-	Statement - onde é montada a query SQL
-	ResultSet - representa um objeto com o resultado da consulta efetuada em forma de tabela
-
-	Métodos ResultSet:
-
-	first() [move para posição 1, se houver]
-	beforeFirst() [move para posição 0]
-	next() [move para o próximo, retorna false se já estiver no último]
-	absolute(int) [move para a posição dada, lembrando que dados reais começam em 1]
-
-	* A primeira posição com dados é a posição 1, diferente de arrays que começam na posição 0
+	Criamos um bloco "try- catch - finally" que inicializa essa variavel e encerra essa variavel ao final (obrigatorio), de modo que, caso ocorra alguma falha será disparada uma exceção, visto que estamos acessando um recurso externo
 
 	Exemplo de código:
 
 		Connection conn = null;
-		Statement st = null;
+		
+		try {
+			conn = DB.openConnection();
+			...
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+		...
+			DB.closeConnection();
+		}
+
+- JDBC Utilização
+
+	APIs utilizadas:
+
+	PreparedStatement - onde é montada e executada a query SQL
+	ResultSet - representa um objeto com o resultado da consulta SQL (utilizando SELECT) retonada em forma de tabela
+
+	Métodos PreparedStatement:
+
+		prepareStatement(<query SQL>) - monta a query a ser executada
+		executeQuery() - executa uma query SELECT montada e devolve um ResultSet
+		executeUpdate() - executa uma query de INSERT, UPDATE e DELETE montada e devolve um inteiro com o numero de linhas afetadas
+		set<tipo>(<local do marcador>, <valor>) - determina os dados a serem inseridos nos marcadores de posição na query
+
+	Métodos ResultSet:
+
+		first() - move para posição 1, se houver
+		beforeFirst() - move para posição 0
+		next() - move para o próximo, retorna false se já estiver no último
+		absolute(int) - move para a posição dada
+		get<tipo>(<coluna da tabela>) - pega o valor de um item do ResultSet
+
+		* A primeira posição com dados é a posição 1, diferente de arrays que começam na posição 0
+
+	Exemplo de código:
+
+		Connection conn = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
 			conn = DB.getConnection();
-			st = conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM DEPARTMENT");
+			
+			// SELECT
+			st = conn.prepareStatement("<query SELECT a ser executada>");
+			rs = st.executeQuery();
 			while (rs.next()) {
-				System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
+				System.out.println(rs.get<tipo>("<coluna da tabela>""));
 			}
-		} catch (Exception e) {
+
+			// INSERT - UPDATE - DELETE
+			st = conn.prepareStatement("<query INSERT - UPDATE - DELETE a ser executada>", Statement.RETURN_GENERATED_KEYS);
+			int rowsAffected = st.executeUpdate();
+			if (rowsAffected > 0) {
+				System.out.println("Done! Total rows affected: " + rowsAffected);
+				rs = st.getGeneratedKeys();
+				if (rs.next()) {
+					int id = rs.getInt(1);
+					System.out.println("id " + id + " affected!");
+				}
+			} else {
+				System.out.println("No rows affected!");
+			}
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
 			DB.closeResultSet(rs);
@@ -3710,86 +3705,141 @@
 			DB.closeConnection();
 		}
 
-	Detalhes:
+	Observações:
 
-	É criado um objeto "conn" tipo Connection para a conexão.
+	As queries podem ser dinamica, criadas por variaveis, desta forma utilizamos o marcador "?" no local onde vai uma variavel, por exemplo:
 
-	É criado um objeto "st" tipo Statement para conter a query a ser executada.
+		INSERT INTO seller Name, Email, BirthDate, BaseSalary, DepartmentId VALUES (?, ?, ?, ?)"
 
-	É criado um objeto "rs" tipo ResultSet para executar a query e conter os resultados.
+	Determinados os dados desde marcadores com o método "set" de PreparedStatement da seguinte forma "set<tipo>(<local do marcador>, <valor>)", por exemplo:
 
-	Utilizamos "while" para percorrer o ResulSet e mostrar os dados.
+		st.setString(1, "Fernando Ribeira");
+		st.setString(2, "fernando@gmail.com");
+		st.setDouble(4, 3000.0);
+		st.setInt(5, 4);
 
-	Utilizamos métodos "get" + tipo com o nome das colunas da tabela para mostrar as informações.
+	Cuidado ao utilizar datas ao gravar no banco de dados, a classe utilizada deve ser "Date" mas do pacote "java.sql", por exemplo:
 
-	É obrigatório criamos um bloco "try- catch - finally" pois como acesso ao banco é um recurso externo existe a possibilidade de erros ocorrerem.
+		INSERT INTO seller BirthDate VALUES (?)
+		st.setDate(1, new java.sql.Date(sdf.parse("22/04/1985").getTime()));
 
-- JDBC Inserção de dados 
+	Queries de SELECT retornam um ResultSet com os dados coletados, queries de INSERT, UPDATE e DELETE  devolvem um inteiro com o numero de linhas afetadas ao colocarmos "Statement.RETURN_GENERATED_KEYS" no final do comando PreparedStatement.
 
-	APIs utilizadas:
+		st = conn.prepareStatement("<query INSERT - UPDATE - DELETE a ser executada>", Statement.RETURN_GENERATED_KEYS);
 
-	PreparedStatement
-	executeUpdate
-	Statement.RETURN_GENERATED_KEYS
-	getGeneratedKeys
+	Para verificarmos os dados de um ResultSet percorremo so mesmo com um "while" no seguinte formato:
+
+		rs = st.executeQuery();
+		while (rs.next()) {
+			System.out.println(rs.get<tipo>("<coluna da tabela>""));
+		}
+
+	O método "get" pega do dado baseado no seu tipo e nome da coluna, por exemplo:
+
+		rs.getInt("Id")
+		rs.getString("Name")
+
+	Obrigatoriamente devemor criar um bloco "try- catch - finally" que inicializa as variaveis de conexão, preparedstatment e resultset, e encerra essas variaveis ao final, de modo que, caso ocorra alguma falha será disparada uma exceção e as variaveis sejam encerradas, visto que estamos acessando um recurso externo.
 
 	Exemplo de código:
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Connection conn = null;
-		PreparedStatement st = null;
-
+		
 		try {
-			conn = DB.getConnection();
-			
-			st = conn.prepareStatement(
-					"INSERT INTO seller "
-					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
-					+ "VALUES "
-					+ "(?, ?, ?, ?, ?)",
-					Statement.RETURN_GENERATED_KEYS);
-			
-			st.setString(1, "Fernando Ribeira");
-			st.setString(2, "fernando@gmail.com");
-			st.setDate(3, new java.sql.Date(sdf.parse("22/04/1985").getTime()));
-			st.setDouble(4, 3000.0);
-			st.setInt(5, 4);
-			
-			int rowsAffected = st.executeUpdate();
-			
-			if (rowsAffected > 0) {
-				System.out.println("Done! Total rows affected: " + rowsAffected);
-				ResultSet rs = st.getGeneratedKeys();
-				while (rs.next()) {
-					int id = rs.getInt(1);
-					System.out.println("Id = " + id);
-				}
-			} else {
-				System.out.println("No rows affected!");
-			}
-			
-		} catch (Exception e) {
+			...
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		} finally {
+		...
+			DB.closeResultSet(rs);
 			DB.closeStatement(st);
 			DB.closeConnection();
 		}
 
-	* Detalhes
-
-	É criado um objeto "conn" tipo Connection para a conexão.
+- Transações e ACID
 	
-	É criado um objeto "st" tipo PreparedStatement para conter a query a ser executada, ela contera marcadores "?" nos locais onde serão inseridos os dados.
+	Uma transação é uma sequência de operações executadas como uma única unidade lógica de trabalho.
 
-	Setamos na variavel PreparedStatement com o método "set" os valores a serem inseridos, o primeiro argumento é o local do marcador, o segundo é o valor.
+	ACID é um conceito que se refere às quatro propriedades de transação de um sistema de banco de dados: Atomicidade, Consistência, Isolamento e Durabilidade.
 
-	Para executar a query utilizamos o método "executeUpdate" do objeto PreparedStatement, ele retona um inteiro com a quantidade de linhas afetadas.
+	Atomicidade: Em uma transação envolvendo duas ou mais partes de informações discretas, ou a transação será executada totalmente ou não será executada, garantindo assim que as transações sejam atômicas.
 
-	É criado um objeto "rs" tipo ResultSet com o método "getGeneratedKeys" do objeto PreparedStatement para coletarmos os Ids criados.
+	Consistência: A transação cria um novo estado válido dos dados ou em caso de falha retorna todos os dados ao seu estado antes que a transação foi iniciada.
 
-	Utilizamos "while" para percorrer o ResulSet e mostrar os Ids.
+	Isolamento: Uma transação em andamento mas ainda não validada deve permanecer isolada de qualquer outra operação, ou seja, garantimos que a transação não será interferida por nenhuma outra transação concorrente.
 
-	Utilizamos métodos "getInt" especificamente da coluna 1 para mostrar as informações.
+	Durabilidade: Dados validados são registados pelo sistema de tal forma que mesmo no caso de uma falha e/ou reinício do sistema, os dados estão disponíveis em seu estado correto.
 
-	É obrigatório criamos um bloco "try- catch - finally" pois como acesso ao banco é um recurso externo existe a possibilidade de erros ocorrerem.
+	A especificação JDBC diz que, quando uma conexão é criada, ela está com o "Auto Commit" ativado.
+
+	Para evitarmos que uma transação seja interrompida e deixe os dados inconsistentes devemos desativar o "Auto Commit" e deixar o Commit ser feito pelo programador, assim como o rollback se necessário.
+
+	Para desativarmos o auto commit devemos executar o comando abaixo no objeto Connection:
+
+		setAutoCommit(false);
+
+	Para comitar ao final das transações devemos executar o comando abaixo no objeto Connection:
+
+		commit();
+
+	Para fazermos rollbackup caso algo de errado devemos executar o comando abaixo (normalmente em uma clausula catch) no objeto Connection:
+
+		rollback();
+
+- Padrão de projeto DAO (Data Access Object)
+
+	O padrão de projeto DAO surgiu com a necessidade de separarmos a lógica de negócios da lógica de persistência de dados. Este padrão permite que possamos mudar a forma de persistência sem que isso influencie em nada na lógica de negócio, além de tornar nossas classes mais legíveis.
+
+	Classes DAO são responsáveis por trocar informações com o SGBD e fornecer operações CRUD e de pesquisas, elas devem ser capazes de buscar dados no banco e transformar esses em objetos ou lista de objetos, fazendo uso de listas genéricas, também deverão receber os objetos, converter em instruções SQL e mandar para o banco de dados.
+
+	Toda interação com a base de dados se dará através destas classes, nunca das classes de negócio, muito menos de formulários.
+
+	Se aplicarmos este padrão corretamente ele vai abstrair completamente o modo de busca e gravação dos dados, tornando isso transparente para aplicação e facilitando muito na hora de fazermos manutenção na aplicação ou migrarmos de banco de dados.
+
+	Também conseguimos centralizar a troca de dados com o SGBD (Sistema Gerenciador de Banco de Dados), teremos um ponto único de acesso a dados, tendo assim nossa aplicação um ótimo design orientado a objeto.
+
+	Para cada entidade, haverá um objeto (interface) responsável por fazer acesso a dados relacionado a esta entidade. Por exemplo:
+
+	Cliente: ClienteDao
+	Produto: ProdutoDao
+	Pedido: PedidoDao
+
+	Cada DAO será definido por uma interface com métodos abstratos "insert", "update", "delete" e "select".
+
+	Criamos então uma classe com o nome do formato de conexão, por exemplo "ClienteDaoJDBC" ou "ClienteDaoJPA" (dependendo do tipo de banco utilizado), implementamos a iterface DAO do tipo e declaramos os métodos conforme devem ser utilizados.
+
+	A injeção de dependência pode ser feita por meio do padrão de projeto "Factory", é uma classe que instancia os objetos DAO baseados na implementações especificas.
+
+	Exemplo de interface:
+
+		package model.dao;
+
+		import java.util.List;
+
+		import model.entities.Department;
+
+		public interface DepartmentDao {
+
+			void insert(Department obj);
+			void update(Department obj);
+			void deleteById(Integer id);
+			Department findById(Integer id);
+			List<Department> findAll();
+			
+		}
+
+	Exemplo de factory:
+
+		package model.dao;
+
+		import model.dao.impl.SellerDaoJDBC;
+
+		public class DaoFactory {
+
+			public static SellerDao createSellerDao() {
+				return new SellerDaoJDBC();
+			}
+			
+		}
+
 
