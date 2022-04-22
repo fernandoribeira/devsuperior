@@ -3342,3 +3342,454 @@
 
 		double sum = ps.filteredSum(list, p -> p.getName().charAt(0) == 'T');
 
+- Stream
+
+	É uma sequencia de elementos advinda de uma fonte de dados que oferece suporte a "operações agregadas".
+
+	Fonte de dados
+
+		Coleção
+		Array
+		Função de iteração
+		Recurso de E/S
+
+	Características
+
+		Stream é uma solução para processar sequências de dados de forma:
+
+		Declarativa (iteração interna: escondida do programador)
+		Parallel-friendly (imutável -> thread safe)
+		Sem efeitos colaterais
+		Sob demanda (lazy evaluation)
+		Acesso sequencial (não há índices)
+		Single-use (só pode ser "usada" uma vez)
+		Pipeline (operações em streams retornam novas streams. Então é possível criar uma cadeia de operações (fluxo de processamento)).
+
+	Operações intermediárias e terminais
+
+	O pipeline é composto por zero ou mais operações intermediárias e uma terminal.
+
+		Operação intermediária:
+
+		Produz uma nova streams (encadeamento)
+		Só executa quando uma operação terminal é invocada (lazy evaluation)
+
+		Operação terminal:
+
+		Produz um objeto não-stream (coleção ou outro)
+		Determina o fim do processamento da stream
+
+	Operações intermediárias
+
+		filter
+		map
+		flatmap
+		peek
+		distinct
+		sorted
+		skip
+		limit (short-circuit, interrompe a stream ao atingir seu objetivo)
+
+	Operações terminais
+
+		forEach
+		forEachOrdered
+		toArray
+		reduce
+		collect
+		min
+		max
+		count
+		anyMatch (short-circuit, interrompe a stream ao atingir seu objetivo)
+		allMatch (short-circuit, interrompe a stream ao atingir seu objetivo)
+		noneMatch (short-circuit, interrompe a stream ao atingir seu objetivo)
+		findFirst (short-circuit, interrompe a stream ao atingir seu objetivo)
+		findAny (short-circuit, interrompe a stream ao atingir seu objetivo)
+
+	Criar uma stream
+
+		Basta chamar o método stream() ou parallelStream() a partir de qualquer objeto Collection.
+
+		Outras formas de se criar uma stream incluem:
+
+		Stream.of
+		Stream.ofNullable
+		Stream.iterate
+
+	Exemplos
+
+		Criando a partir de uma lista:
+
+			List<Integer> list = Arrays.asList(3, 4, 5, 10, 7);
+			Stream<Integer> st1 = list.stream().map(x -> x * 10);
+			System.out.println(Arrays.toString(st1.toArray()));
+
+			* Resultado: [30, 40, 50, 100, 70]
+
+		Criando diretamente:
+		
+			Stream<String> st2 = Stream.of("Maria", "Alex", "Bob");
+			System.out.println(Arrays.toString(st2.toArray()));
+
+			* Resultado: [Maria, Alex, Bob]
+
+		Criando no modo iterativo e imprimindo com limite:
+		
+			Stream<Integer> st3 = Stream.iterate(0,  x -> x + 2);
+			System.out.println(Arrays.toString(st3.limit(10).toArray()));
+
+			* Resultado: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+
+		Criando sequencia de Fibonnati no modo iterativo e imprimindo com limite:
+		
+			Stream<Long> st4 = Stream.iterate(
+					new Long[] {0L, 1L},
+					p -> new Long[] {p[1], p[0] + p[1]}).map(p -> p[0]);
+			System.out.println(Arrays.toString(st4.limit(10).toArray()));
+
+			* Resultado: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+- Pipeline
+
+	É a aplicação de operações sucessivas em um stream, exemplo abaixo:
+
+	List<Integer> newList = list.stream()
+		.filter(x -> x % 2 == 0)
+		.map(x -> x * 10)
+		.collect(Collectors.toList());
+	System.out.println(Arrays.toString(newList.toArray()));
+
+- JDBC (Java Database Connectivity)
+
+	O JDBC é a API padrão do Java para acesso a banco de dados.
+
+	Voce programa na aplicação java voltado para o JDBC, utilizando seus métodos, independente do banco de dados utilizado.
+
+	Depois, utilizando um driver especifico para o banco de dados desejado, o programa se comunica com o banco de dados.
+
+	Sendo assim voce programa de uma so forma o acesso a dados e os drivers se encarregam e traduzir para cada banco.
+
+	Pacotes: java.sql e javax.sql (API suplementar para servidores)
+
+- Algebra relacional
+
+	Operações básicas:
+
+	Produto cartesiano - busca todos os dados das tabelas selecionadas, trazendo como resultado o cruzamento de todos os dados da tabela, trazendo todos os dados, sem restrição, por exemplo:
+
+		SELECT *
+		FROM PRODUCT, CATEGORY
+
+	Junção - é um produto cartesiano com restrição de chave estrangeira com chave primária, por exemplo:
+
+		SELECT *
+		FROM PRODUCT, CATEGORY
+		WHERE
+			PRODUCT.CATEGORY_ID = CATEGORY.ID
+
+	Restrição - é similar a junção porem com maiores restrições, por exemplo:
+
+		SELECT *
+		FROM PRODUCT, CATEGORY
+		WHERE
+			PRODUCT.CATEGORY_ID = CATEGORY.ID AND CATEGORY.NAME = 'Computers'
+
+	Projeção - seleciona somente os campos desejados, por exemplo:
+
+		SELECT PRODUCT.*, CATEGORY.NAME
+		FROM PRODUCT, CATEGORY
+		WHERE
+			PRODUCT.CATEGORY_ID = CATEGORY.ID AND CATEGORY.NAME = 'Computers'
+
+- Comandos SQL
+
+	Criar database: create database <nome da database>;
+	Selecionar banco de dados: use <nome da database>;
+
+- Conectar Java ao MySQL
+
+	É necessário baixar o " MySQL Java Connector" em "https://dev.mysql.com/downloads/connector/j/".
+
+	Baixar a versão ".zip" "Plataform Independent".
+
+	Extrair o arquivo compactado e copiar o arquivo "mysql-connector-java-<versão>.jar" em uma pasta qualquer do Eclipse.
+
+	Criar uma "User Library" no Eclipse:
+
+	Window -> Preferences -> Java -> Build path -> User Libraries
+	Dê o nome da "User Library" de "MySQLConnector"
+	Add external JARs -> localize o arquivo jar e insira
+
+	Ao criar um novo projeto no Eclipse, na segunda tela (Java Settings), clicar na aba "Libraries", clicar no "Modulepath", clicar em "Add library", selecionar "User Library" e adicinonar nossa biblioteca criada.
+
+	Na pasta raiz do projeto, criar um arquivo "db.properties" contendo os dados de conexão:
+
+	user=<nome do usuário>
+	password=<senha>
+	dburl=jdbc:mysql://localhost:3306/<nome da database>
+	useSSL=false
+
+	Criar um pacote "db" no projeto.
+
+	Criar uma exceção personalizada "DbException" no pacote "db" com o seguinte conteúdo:
+
+		package db;
+
+		public class DbException extends RuntimeException {
+
+			private static final long serialVersionUID = 1L;
+
+			public DbException(String message) {
+				super(message);
+			}
+			
+		}
+
+	Ainda no pacote "db", criar uma classe DB com métodos estáticos auxiliares para obter e fechar uma conexão, statement e resultset com o banco com o seguinte conteúdo:
+
+		package db;
+
+		import java.io.FileInputStream;
+		import java.io.FileNotFoundException;
+		import java.io.IOException;
+		import java.sql.Connection;
+		import java.sql.DriverManager;
+		import java.sql.ResultSet;
+		import java.sql.SQLException;
+		import java.sql.Statement;
+		import java.util.Properties;
+
+		public class DB {
+			
+			private static Connection conn = null;
+			
+			public static Connection getConnection() {
+				if (conn == null) {
+					try {
+						Properties properties = loadProperties();
+						String url = properties.getProperty("dburl");
+						conn = DriverManager.getConnection(url, properties);
+					} catch (SQLException e) {
+						throw new DbException(e.getMessage());
+					}
+				}
+				return conn;
+			}
+			
+			public static void closeConnection() {
+				if (conn != null) {
+					try {
+						conn.close();
+					} catch (SQLException e) {
+						throw new DbException(e.getMessage());
+					}
+				}
+			}
+			
+			public static void closeStatement(Statement st) {
+				if (st != null) {
+					try {
+						st.close();
+					} catch (SQLException e) {
+						throw new DbException(e.getMessage());
+					}
+				}
+			}
+			
+			public static void closeResultSet(ResultSet rs) {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException e) {
+						throw new DbException(e.getMessage());
+					}
+				}
+			}
+			
+			private static Properties loadProperties() {
+				try (FileInputStream file = new FileInputStream("db.properties")) {
+					Properties properties = new Properties();
+					properties.load(file);
+					return properties;
+				} catch (FileNotFoundException e) {
+					throw new DbException(e.getMessage());
+				} catch (IOException e) {
+					throw new DbException(e.getMessage());
+				}
+			}
+			
+		}
+
+
+	Detalhes:
+
+	É criada uma classe de exceção personalizada que herda de "RuntimeException", desta forma não precisa de tratativa.
+
+	A classe "DB" possui métodos para criação da conexão com o banco, encerramento da conexão com o banco, encerramento do objeto de statement, encerramento do objeto de resultset e um método para carregamento das propriedades do arquivo de conexão com o banco de dados.
+
+- Conexão com o banco de dados
+
+	É necessária a criação de uma conexão, um statement e um resultset, todos inicalizados com "null".
+
+	Em seguida criamos um bloco "try- catch - finally" que inicializa essas variaveis, executa a consulta e retorna os resultados, trata as exceções e encerra a conexão, o statement e o resultset.
+
+	Exemplo de código:
+
+		package application;
+
+		import java.sql.Connection;
+		import java.sql.ResultSet;
+		import java.sql.Statement;
+
+		import db.DB;
+
+		public class Program {
+			public static void main(String[] args) {
+				
+				Connection conn = null;
+				Statement st = null;
+				ResultSet rs = null;
+				
+				try {
+					conn = DB.getConnection();
+					st = conn.createStatement();
+					rs = st.executeQuery("SELECT * FROM DEPARTMENT");
+					while (rs.next()) {
+						System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
+					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				} finally {
+					DB.closeResultSet(rs);
+					DB.closeStatement(st);
+					DB.closeConnection();
+				}
+			}
+		}
+
+	Detalhes:
+
+	É criado um objeto "conn" tipo Connection para a conexão.
+	
+	É obrigatório criamos um bloco "try- catch - finally" pois como acesso ao banco é um recurso externo existe a possibilidade de erros ocorrerem.
+
+- JDBC Recuperação de dados
+
+	APIs utilizadas:
+
+	Statement - onde é montada a query SQL
+	ResultSet - representa um objeto com o resultado da consulta efetuada em forma de tabela
+
+	Métodos ResultSet:
+
+	first() [move para posição 1, se houver]
+	beforeFirst() [move para posição 0]
+	next() [move para o próximo, retorna false se já estiver no último]
+	absolute(int) [move para a posição dada, lembrando que dados reais começam em 1]
+
+	* A primeira posição com dados é a posição 1, diferente de arrays que começam na posição 0
+
+	Exemplo de código:
+
+		Connection conn = null;
+		Statement st = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = DB.getConnection();
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT * FROM DEPARTMENT");
+			while (rs.next()) {
+				System.out.println(rs.getInt("Id") + ", " + rs.getString("Name"));
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			DB.closeResultSet(rs);
+			DB.closeStatement(st);
+			DB.closeConnection();
+		}
+
+	Detalhes:
+
+	É criado um objeto "conn" tipo Connection para a conexão.
+
+	É criado um objeto "st" tipo Statement para conter a query a ser executada.
+
+	É criado um objeto "rs" tipo ResultSet para executar a query e conter os resultados.
+
+	Utilizamos "while" para percorrer o ResulSet e mostrar os dados.
+
+	Utilizamos métodos "get" + tipo com o nome das colunas da tabela para mostrar as informações.
+
+	É obrigatório criamos um bloco "try- catch - finally" pois como acesso ao banco é um recurso externo existe a possibilidade de erros ocorrerem.
+
+- JDBC Inserção de dados 
+
+	APIs utilizadas:
+
+	PreparedStatement
+	executeUpdate
+	Statement.RETURN_GENERATED_KEYS
+	getGeneratedKeys
+
+	Exemplo de código:
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Connection conn = null;
+		PreparedStatement st = null;
+
+		try {
+			conn = DB.getConnection();
+			
+			st = conn.prepareStatement(
+					"INSERT INTO seller "
+					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES "
+					+ "(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			
+			st.setString(1, "Fernando Ribeira");
+			st.setString(2, "fernando@gmail.com");
+			st.setDate(3, new java.sql.Date(sdf.parse("22/04/1985").getTime()));
+			st.setDouble(4, 3000.0);
+			st.setInt(5, 4);
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected > 0) {
+				System.out.println("Done! Total rows affected: " + rowsAffected);
+				ResultSet rs = st.getGeneratedKeys();
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					System.out.println("Id = " + id);
+				}
+			} else {
+				System.out.println("No rows affected!");
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeConnection();
+		}
+
+	* Detalhes
+
+	É criado um objeto "conn" tipo Connection para a conexão.
+	
+	É criado um objeto "st" tipo PreparedStatement para conter a query a ser executada, ela contera marcadores "?" nos locais onde serão inseridos os dados.
+
+	Setamos na variavel PreparedStatement com o método "set" os valores a serem inseridos, o primeiro argumento é o local do marcador, o segundo é o valor.
+
+	Para executar a query utilizamos o método "executeUpdate" do objeto PreparedStatement, ele retona um inteiro com a quantidade de linhas afetadas.
+
+	É criado um objeto "rs" tipo ResultSet com o método "getGeneratedKeys" do objeto PreparedStatement para coletarmos os Ids criados.
+
+	Utilizamos "while" para percorrer o ResulSet e mostrar os Ids.
+
+	Utilizamos métodos "getInt" especificamente da coluna 1 para mostrar as informações.
+
+	É obrigatório criamos um bloco "try- catch - finally" pois como acesso ao banco é um recurso externo existe a possibilidade de erros ocorrerem.
+
