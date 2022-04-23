@@ -3475,7 +3475,7 @@
 
 	Sendo assim voce programa de uma so forma o acesso a dados e os drivers se encarregam de traduzir para cada banco.
 
-- Conectar Java ao MySQL
+- Configurar conexão do Java ao MySQL
 
 	É necessário baixar o " MySQL Java Connector" em "https://dev.mysql.com/downloads/connector/j/".
 
@@ -3491,6 +3491,8 @@
 
 	Ao criar um novo projeto no Eclipse, na segunda tela (Java Settings), clicar na aba "Libraries", clicar no "Modulepath", clicar em "Add library", selecionar "User Library" e adicinonar nossa biblioteca criada.
 
+- Configurar acesso ao banco de dados
+
 	Inicialmente temos de passar os dados de conexão com o banco.
 
 	Na pasta raiz do projeto, criar um arquivo "db.properties" contendo os dados de conexão:
@@ -3503,47 +3505,31 @@
 	Exemplo:
 
 	user=developer
-	password=01Admin10!
+	password=123456
 	dburl=jdbc:mysql://localhost:3306/coursejdbc
 	useSSL=false
 
-	Devemos criar classes de utilitarios de database para auxiliar no uso do banco de dados.
+	Como boa pratica devemos criar classes auxiliares de database para auxiliar no uso do banco de dados.
 
-	Criar um pacote "exception" no projeto.
+	Criar um pacote "db" no projeto, ele irá conter nossas classes auxiliares.
 
-	Criar uma exceção personalizada "DbStandardException" no pacote "exception" com o seguinte conteúdo:
+	Criar uma exceção personalizada "DbException" no pacote "db" com o seguinte conteúdo:
 
-		package exception;
+		package db;
 
-		public class DbStandardException extends RuntimeException {
+		public class DbException extends RuntimeException {
 
 			private static final long serialVersionUID = 1L;
-
-			public DbStandardException(String message) {
+			
+			public DbException(String message) {
 				super(message);
 			}
 			
 		}
 
-	Esta classe de exceção personalizada herda de "RuntimeException", desta forma não precisa de tratativa, podemos então lançar esta exceção para cada catch de SQLException, exceto em delete no banco de dados.
+	Esta classe de exceção personalizada herda de "RuntimeException", desta forma não precisa de tratativa, podemos então lançar esta exceção para cada catch de SQLException.
 
-	Criar uma exceção personalizada "DbIntegrityException" no pacote "exception" com o seguinte conteúdo:
-
-		package exception;
-
-		public class DbIntegrityException extends RuntimeException {
-
-			private static final long serialVersionUID = 1L;
-
-			public DbIntegrityException(String message) {
-				super(message);
-			}
-			
-		}
-
-	Esta classe de exceção personalizada herda de "RuntimeException", desta forma não precisa de tratativa, podemos então lançar esta exceção para catch de SQLException em operações de delete, assim visualizamos de forma mais clara quando ocorrer uma falha relacionada a integridade do banco.
-
-	Agora criar um pacote "db", criar uma classe Db com métodos estáticos auxiliares para obter e fechar uma conexão, statement e resultset com o banco com o seguinte conteúdo:
+	Criar uma classe "Db" no pacote "db" com métodos estáticos auxiliares para obter e fechar uma conexão, statement e resultset com o banco, com o seguinte conteúdo:
 
 		package db;
 
@@ -3556,8 +3542,6 @@
 		import java.sql.Statement;
 		import java.util.Properties;
 
-		import exception.DbStandardException;
-
 		public class Db {
 			
 			private static Connection conn = null;
@@ -3569,7 +3553,7 @@
 						String url = properties.getProperty("dburl");
 						conn = DriverManager.getConnection(url, properties);
 					} catch (SQLException e) {
-						throw new DbStandardException(e.getMessage());
+						throw new DbException(e.getMessage());
 					}
 				}
 				return conn;
@@ -3580,7 +3564,7 @@
 					try {
 						conn.close();
 					} catch (SQLException e) {
-						throw new DbStandardException(e.getMessage());
+						throw new DbException(e.getMessage());
 					}
 				}
 			}
@@ -3590,7 +3574,7 @@
 					try {
 						st.close();
 					} catch (SQLException e) {
-						throw new DbStandardException(e.getMessage());
+						throw new DbException(e.getMessage());
 					}
 				}
 			}
@@ -3600,7 +3584,7 @@
 					try {
 						rs.close();
 					} catch (SQLException e) {
-						throw new DbStandardException(e.getMessage());
+						throw new DbException(e.getMessage());
 					}
 				}
 			}
@@ -3611,7 +3595,7 @@
 					properties.load(file);
 					return properties;
 				} catch (IOException e) {
-					throw new DbStandardException(e.getMessage());
+					throw new DbException(e.getMessage());
 				}
 			}
 
@@ -3619,36 +3603,644 @@
 
 	A classe "Db" possui métodos para abertura da conexão com o banco, encerramento da conexão com o banco, encerramento do objeto de statement, encerramento do objeto de resultset e um método para carregamento das propriedades do arquivo de conexão com o banco de dados.
 
-- Conexão com o banco de dados
+- Padrão de projeto DAO (Data Access Object)
 
-	É necessária a criação de um objeto Conenction para estabelecer uma conexão e acessar o banco de dados.
+	O padrão de projeto DAO surgiu com a necessidade de separarmos a lógica de negócios da lógica de persistência de dados. Este padrão permite que possamos mudar a forma de persistência sem que isso influencie em nada na lógica de negócio, além de tornar nossas classes mais legíveis.
 
-	Declaramos então esta variavel com valor nulo:
+	Classes DAO são responsáveis por trocar informações com o SGBD e fornecer operações CRUD e de pesquisas, elas devem ser capazes de buscar dados no banco e transformar esses em objetos ou lista de objetos, fazendo uso de listas genéricas, também deverão receber os objetos, converter em instruções SQL e mandar para o banco de dados.
 
-	Connection conn = null;
+	Toda interação com a base de dados se dará através destas classes, nunca das classes de negócio, muito menos de formulários.
 
-	Criamos um bloco "try- catch - finally" que inicializa essa variavel e encerra essa variavel ao final (obrigatorio), de modo que, caso ocorra alguma falha será disparada uma exceção, visto que estamos acessando um recurso externo
+	Se aplicarmos este padrão corretamente ele vai abstrair completamente o modo de busca e gravação dos dados, tornando isso transparente para aplicação e facilitando muito na hora de fazermos manutenção na aplicação ou migrarmos de banco de dados.
 
-	Exemplo de código:
+	Também conseguimos centralizar a troca de dados com o SGBD (Sistema Gerenciador de Banco de Dados), teremos um ponto único de acesso a dados, tendo assim nossa aplicação um ótimo design orientado a objeto.
 
-		Connection conn = null;
-		
-		try {
-			conn = DB.openConnection();
-			...
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-		...
-			DB.closeConnection();
+	Para cada entidade do pacote "model.entities", haverá um objeto (interface) no pacote "model.dao" responsável por determinar os métodos de acesso a dados relacionado a esta entidade. Por exemplo:
+
+	Entidade "Department" -> Interface "DepartmentDao"
+	Entidade "Seller" -> Interface "SellerDao"
+
+	Nestas interfaces determinaremos todos os métodos "insert", "update", "delete" e "select" necessários a entidade.
+
+	Exemplo Interface "DepartmentDao":
+
+		package model.dao;
+
+		import java.util.List;
+
+		import model.entities.Department;
+		import model.entities.Seller;
+
+		public interface SellerDao {
+			
+			void insert(Seller obj);
+			void update(Seller obj);
+			void deleteById(Integer id);
+			Seller findById(Integer id);
+			List<Seller> findAll();
+			List<Seller> findByDepartment(Department department);
+
 		}
+
+	Exemplo Interface "SellerDao":
+
+		package model.dao;
+
+		import java.util.List;
+
+		import model.entities.Department;
+		import model.entities.Seller;
+
+		public interface SellerDao {
+			
+			void insert(Seller obj);
+			void update(Seller obj);
+			void deleteById(Integer id);
+			Seller findById(Integer id);
+			List<Seller> findAll();
+			List<Seller> findByDepartment(Department department);
+
+		}
+
+	A criação destes métodos será feita em classes separadas, no pacote "model.dao.imp", elas implementam a interface "...Dao" relacionada, por exemplo:
+
+	Classe "DepartmentDaoJDBC" -> Interface "DepartmentDao"
+	Classe "SellerDaoJDBC" -> Interface "SellerDao"
+
+	Colocamos o sufixo "JDBC" na classe pois é implementado o conector JDBC, caso fosse outro poderiamos alterar para algo mais apropriado.
+
+	Nestas classes estão toda a ´lógica de acesso ao banco de dados.
+
+	Exemplos de classes:
+
+	Classe "DepartmentDaoJDBC":
+
+		package model.dao.impl;
+
+		import java.sql.Connection;
+		import java.sql.PreparedStatement;
+		import java.sql.ResultSet;
+		import java.sql.SQLException;
+		import java.sql.Statement;
+		import java.util.ArrayList;
+		import java.util.List;
+
+		import db.Db;
+		import db.DbException;
+		import model.dao.DepartmentDao;
+		import model.entities.Department;
+
+		public class DepartmentDaoJDBC implements DepartmentDao {
+			
+			private Connection conn = null;
+			
+			public DepartmentDaoJDBC(Connection conn) {
+				this.conn = conn;
+			}
+
+			@Override
+			public void insert(Department obj) {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					conn.setAutoCommit(false);
+					st = conn.prepareStatement("INSERT INTO department (Name) VALUES (?)",
+							Statement.RETURN_GENERATED_KEYS);
+					st.setString(1, obj.getName());
+					int rowsAffected = st.executeUpdate();
+					conn.commit();
+					if (rowsAffected > 0) {
+						rs = st.getGeneratedKeys();
+						if (rs.next()) {
+							int id = rs.getInt(1);
+							obj.setId(id);
+							System.out.println("New departement Id: " + id + " created with success!");
+						}
+					} else {
+						try {
+							conn.rollback();
+						} catch (SQLException eRollback) {
+							throw new DbException(eRollback.getMessage());
+						}
+						throw new DbException("No department created!");
+					}
+				} catch (SQLException e) {
+					try {
+						conn.rollback();
+					} catch (SQLException eRollback) {
+						throw new DbException(eRollback.getMessage());
+					}
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeResultSet(rs);
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public void update(Department obj) {
+				PreparedStatement st = null;
+				try {
+					conn.setAutoCommit(false);
+					st = conn.prepareStatement("UPDATE department SET Name = ? WHERE Id = ?");
+					st.setString(1, obj.getName());
+					st.setInt(2, obj.getId());
+					int rowsAffected = st.executeUpdate();
+					conn.commit();
+					if (rowsAffected > 0) {
+						System.out.println("Department Id: " + obj.getId() + " updated with success!");
+					} else {
+						try {
+							conn.rollback();
+						} catch (SQLException eRollback) {
+							throw new DbException(eRollback.getMessage());
+						}
+						throw new DbException("No department updated!");
+					}
+				} catch (SQLException e) {
+					try {
+						conn.rollback();
+					} catch (SQLException eRollback) {
+						throw new DbException(eRollback.getMessage());
+					}
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public void deleteById(Integer id) {
+				PreparedStatement st = null;
+				try {
+					conn.setAutoCommit(false);
+					st = conn.prepareStatement("DELETE FROM department WHERE Id = ?");
+					st.setInt(1, id);
+					int rowsAffected = st.executeUpdate();
+					conn.commit();
+					if (rowsAffected > 0) {
+						System.out.println("Department Id: " + id + " deleted with success!");
+					} else {
+						try {
+							conn.rollback();
+						} catch (SQLException eRollback) {
+							throw new DbException(eRollback.getMessage());
+						}
+						throw new DbException("No department deleted!");
+					}
+				} catch (SQLException e) {
+					try {
+						conn.rollback();
+					} catch (SQLException eRollback) {
+						throw new DbException(eRollback.getMessage());
+					}
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public Department findById(Integer id) {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					st = conn.prepareStatement("SELECT * FROM department WHERE Id = ? ORDER BY Name");
+					st.setInt(1, id);
+					rs = st.executeQuery();
+					if (rs.next()) {
+						Department d = instantiateDepartment(rs);
+						return d;
+					} else {
+						return null;
+					}
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public List<Department> findAll() {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					st = conn.prepareStatement("SELECT * FROM department ORDER BY Name");
+					rs = st.executeQuery();
+					List<Department> list = new ArrayList<>();
+					while (rs.next()) {
+						Department d = instantiateDepartment(rs);
+						list.add(d);
+					}
+					return list;
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeResultSet(rs);
+					Db.closeStatement(st);
+				}
+			}
+			
+			public Department instantiateDepartment(ResultSet rs) throws SQLException {
+				Department department = new Department(
+						rs.getInt("Id"),
+						rs.getString("Name"));
+				return department;
+			}
+
+		}
+
+	Classe "SellerDaoJDBC":
+
+		package model.dao.impl;
+
+		import java.sql.Connection;
+		import java.sql.PreparedStatement;
+		import java.sql.ResultSet;
+		import java.sql.SQLException;
+		import java.sql.Statement;
+		import java.util.ArrayList;
+		import java.util.HashMap;
+		import java.util.List;
+		import java.util.Map;
+
+		import db.Db;
+		import db.DbException;
+		import model.dao.SellerDao;
+		import model.entities.Department;
+		import model.entities.Seller;
+
+		public class SellerDaoJDBC implements SellerDao {
+			
+			private Connection conn = null;
+			
+			public SellerDaoJDBC(Connection conn) {
+				this.conn = conn;
+			}
+
+			@Override
+			public void insert(Seller obj) {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					conn.setAutoCommit(false);
+					st = conn.prepareStatement(
+							"INSERT INTO seller "
+							+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+							+ "VALUES "
+							+ "(?, ?, ?, ?, ?)",
+							Statement.RETURN_GENERATED_KEYS);
+					st.setString(1, obj.getName());
+					st.setString(2, obj.getEmail());
+					st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+					st.setDouble(4, obj.getBaseSalary());
+					st.setInt(5, obj.getDepartment().getId());
+					int rowsAffected = st.executeUpdate();
+					conn.commit();
+					if (rowsAffected > 0) {
+						rs = st.getGeneratedKeys();
+						if (rs.next()) {
+							int id = rs.getInt(1);
+							obj.setId(id);
+							System.out.println("New seller Id: " + id + " created with success!");
+						}
+					} else {
+						try {
+							conn.rollback();
+						} catch (SQLException eRollback) {
+							throw new DbException(eRollback.getMessage());
+						}
+						throw new DbException("No seller created!");
+					}
+				} catch (SQLException e) {
+					try {
+						conn.rollback();
+					} catch (SQLException eRollback) {
+						throw new DbException(eRollback.getMessage());
+					}
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeResultSet(rs);
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public void update(Seller obj) {
+				PreparedStatement st = null;
+				try {
+					conn.setAutoCommit(false);
+					st = conn.prepareStatement(
+							"UPDATE seller "
+							+ "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+							+ "WHERE Id = ?");
+					st.setString(1, obj.getName());
+					st.setString(2, obj.getEmail());
+					st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+					st.setDouble(4, obj.getBaseSalary());
+					st.setInt(5, obj.getDepartment().getId());
+					st.setInt(6, obj.getId());
+					int rowsAffected = st.executeUpdate();
+					conn.commit();
+					if (rowsAffected > 0) {
+						System.out.println("Seller Id: " + obj.getId() + " updated with success!");
+					} else {
+						try {
+							conn.rollback();
+						} catch (SQLException eRollback) {
+							throw new DbException(eRollback.getMessage());
+						}
+						throw new DbException("No seller updated!");
+					}
+				} catch (SQLException e) {
+					try {
+						conn.rollback();
+					} catch (SQLException eRollback) {
+						throw new DbException(eRollback.getMessage());
+					}
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public void deleteById(Integer id) {
+				PreparedStatement st = null;
+				try {
+					conn.setAutoCommit(false);
+					st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+					st.setInt(1, id);
+					int rowsAffected = st.executeUpdate();
+					conn.commit();
+					if (rowsAffected > 0) {
+						System.out.println("Seller Id: " + id + " deleted with success!");
+					} else {
+						try {
+							conn.rollback();
+						} catch (SQLException eRollback) {
+							throw new DbException(eRollback.getMessage());
+						}
+						throw new DbException("No seller deleted!");
+					}
+				} catch (SQLException e) {
+					try {
+						conn.rollback();
+					} catch (SQLException eRollback) {
+						throw new DbException(eRollback.getMessage());
+					}
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeStatement(st);
+				}
+				
+			}
+
+			@Override
+			public Seller findById(Integer id) {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					st = conn.prepareStatement(
+							"SELECT seller.*,department.Name as DepartmentName "
+							+ "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id "
+							+ "WHERE seller.Id = ?");
+					st.setInt(1, id);
+					rs = st.executeQuery();
+					if (rs.next()) {
+						Department d = instantiateDepartment(rs);
+						Seller s = instantiateSeller(rs, d);
+						return s;
+					} else {
+						return null;
+					}
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeResultSet(rs);
+					Db.closeStatement(st);
+				}
+			}
+
+			@Override
+			public List<Seller> findAll() {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					st = conn.prepareStatement(
+							"SELECT seller.*,department.Name as DepartmentName "
+							+ "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id "
+							+ "ORDER BY Name");
+					rs = st.executeQuery();
+					List<Seller> list = new ArrayList<>();
+					Map<Integer, Department> map = new HashMap<>();
+					while (rs.next()) {
+						Department d;
+						d = map.get(rs.getInt("DepartmentId"));
+						if (d == null) {
+							d = instantiateDepartment(rs);
+							map.put(rs.getInt("DepartmentId"), d);
+						}
+						Seller s = instantiateSeller(rs, d);
+						list.add(s);
+					}
+					return list;
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeResultSet(rs);
+					Db.closeStatement(st);
+				}
+			}
+			
+			@Override
+			public List<Seller> findByDepartment(Department department) {
+				PreparedStatement st = null;
+				ResultSet rs = null;
+				try {
+					st = conn.prepareStatement(
+							"SELECT seller.*,department.Name as DepartmentName "
+							+ "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id "
+							+ "WHERE DepartmentId = ? "
+							+ "ORDER BY Name");
+					st.setInt(1, department.getId());
+					rs = st.executeQuery();
+					List<Seller> list = new ArrayList<>();
+					Map<Integer, Department> map = new HashMap<>();
+					while (rs.next()) {
+						Department d;
+						d = map.get(rs.getInt("DepartmentId"));
+						if (d == null) {
+							d = instantiateDepartment(rs);
+							map.put(rs.getInt("DepartmentId"), d);
+						}		
+						Seller s = instantiateSeller(rs, d);
+						list.add(s);
+					}
+					return list;
+				} catch (SQLException e) {
+					throw new DbException(e.getMessage());
+				} finally {
+					Db.closeResultSet(rs);
+					Db.closeStatement(st);
+				}
+			}
+			
+			private Department instantiateDepartment(ResultSet rs) throws SQLException {
+				Department department = new Department(
+						rs.getInt("DepartmentId"),
+						rs.getString("DepartmentName"));
+				return department;
+			}
+			
+			private Seller instantiateSeller(ResultSet rs, Department department) throws SQLException {
+				Seller seller = new Seller(
+						rs.getInt("Id"),
+						rs.getString("Name"),
+						rs.getString("Email"),
+						rs.getDate("Birthdate"),
+						rs.getDouble("BaseSalary"),
+						department);
+				return seller;
+			}
+
+		}
+
+	Estas classes de acesso ao banco de dados não são instanciadas diretamente, para isso criamos uma classe no pacote "model.dao" com o nome de "DaoFactory" que é uma "fábrica" de Dao's.
+
+	Esta classe tem um método estático para cada classe "Dao", criando o seu objeto já abrindo a conexão.
+
+	Exemplo:
+
+		package model.dao;
+
+		import db.Db;
+		import model.dao.impl.DepartmentDaoJDBC;
+		import model.dao.impl.SellerDaoJDBC;
+
+		public class DaoFactory {
+
+			public static SellerDao createSellerDao() {
+				return new SellerDaoJDBC(Db.openConnection());
+			}
+			
+			public static DepartmentDao createDepartmentDao() {
+				return new DepartmentDaoJDBC(Db.openConnection());
+			}
+			
+		}
+
+	Neste momento temos as entidades, suas interfaces que determinam as ações do banco de dados, suas classes "Dao" que implementam estas ações e uma classe "factory" que instancia as classes necessarias.
+
+
+
+	Para finalizar basta executar as ações desejada no banco em uma classe "Program", ele instancia a interface "Dao" ao inves da classe que implementa as ações, ja atribuindo um valor executando o método estatico da classe "factory" relacionado a entidade desejada.
+
+	Exemplo abaixo:
+
+		package application;
+
+		import java.util.Date;
+		import java.util.List;
+
+		import model.dao.DaoFactory;
+		import model.dao.DepartmentDao;
+		import model.dao.SellerDao;
+		import model.entities.Department;
+		import model.entities.Seller;
+
+		public class Program {
+			public static void main(String[] args) {
+
+				SellerDao sellerDao = DaoFactory.createSellerDao();
+				Seller seller;
+				Department department;
+
+				System.out.println("----- Test 1: Seller findById -----");
+				seller = sellerDao.findById(3);
+				System.out.println(seller);
+				System.out.println();
+				
+				System.out.println("----- Test 2: Seller findByDepartment -----");
+				department = new Department(3, null);
+				List<Seller> listByDepartment = sellerDao.findByDepartment(department);
+				for (Seller s : listByDepartment) {
+					System.out.println(s);
+				}
+				System.out.println();
+				
+				System.out.println("----- Test 3: Seller findAll -----");
+				List<Seller> listAllSeller = sellerDao.findAll();
+				for (Seller s : listAllSeller) {
+					System.out.println(s);
+				}
+				System.out.println();
+				
+				System.out.println("----- Test 4: Seller insert -----");
+				Seller newSeller = new Seller(null, "Gregorio", "gregorio@gmail.com", new Date(), 4000.0, department);
+				sellerDao.insert(newSeller);
+				System.out.println();
+
+				System.out.println("----- Test 5: Seller update -----");
+				seller = sellerDao.findById(2);
+				seller.setName("Bolacha Nova");
+				seller.setEmail("bolachanova@gmail.com1");
+				seller.setBirthDate(new Date());
+				seller.setBaseSalary(10001.0);
+				seller.setDepartment(department);
+				sellerDao.update(seller);
+				System.out.println();
+				
+				System.out.println("----- Test 6: Seller delete -----");
+				sellerDao.deleteById(21);
+				System.out.println();
+				
+				DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+
+				System.out.println("----- Test 1: Department findAll -----");
+				List<Department> listAllDepartment = departmentDao.findAll();
+				for (Department d : listAllDepartment) {
+					System.out.println(d);
+				}
+				System.out.println();
+				
+				System.out.println("----- Test 2: Department findById -----");
+				department = departmentDao.findById(3);
+				System.out.println(department);
+				System.out.println();
+				
+				System.out.println("----- Test 3: Department deleteById -----");
+				departmentDao.deleteById(9);
+				System.out.println();
+				
+				System.out.println("----- Test 4: Department update -----");
+				department = departmentDao.findById(1);
+				department.setName("Xuxu");
+				departmentDao.update(department);
+				System.out.println();
+				
+				System.out.println("----- Test 5: Department insert -----");
+				department = new Department(null, "Fofinha");
+				departmentDao.insert(department);
+				System.out.println();
+				
+			}
+		}
+
+- Captura de exceções
+
+	Criamos um bloco "try- catch - finally" nas classes que implementam ações no banco de dados, de modo que, caso ocorra alguma falha será disparada uma exceção, visto que estamos acessando um recurso externo.
 
 - JDBC Utilização
 
 	APIs utilizadas:
 
 	PreparedStatement - onde é montada e executada a query SQL
-	ResultSet - representa um objeto com o resultado da consulta SQL (utilizando SELECT) retonada em forma de tabela
+	ResultSet - representa um objeto com o resultado da consulta SQL (utilizando SELECT) retornada em forma de tabela
 
 	Métodos PreparedStatement:
 
@@ -3663,55 +4255,17 @@
 		beforeFirst() - move para posição 0
 		next() - move para o próximo, retorna false se já estiver no último
 		absolute(int) - move para a posição dada
-		get<tipo>(<coluna da tabela>) - pega o valor de um item do ResultSet
+		get<tipo>("<coluna da tabela>") - pega o valor de um item do ResultSet
 
 		* A primeira posição com dados é a posição 1, diferente de arrays que começam na posição 0
 
-	Exemplo de código:
+	Observações gerais:
 
-		Connection conn = null;
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		
-		try {
-			conn = DB.getConnection();
-			
-			// SELECT
-			st = conn.prepareStatement("<query SELECT a ser executada>");
-			rs = st.executeQuery();
-			while (rs.next()) {
-				System.out.println(rs.get<tipo>("<coluna da tabela>""));
-			}
+	As queries podem ser dinamicas, composta por variaveis, desta forma utilizamos o marcador "?" no local onde vai uma variavel, por exemplo:
 
-			// INSERT - UPDATE - DELETE
-			st = conn.prepareStatement("<query INSERT - UPDATE - DELETE a ser executada>", Statement.RETURN_GENERATED_KEYS);
-			int rowsAffected = st.executeUpdate();
-			if (rowsAffected > 0) {
-				System.out.println("Done! Total rows affected: " + rowsAffected);
-				rs = st.getGeneratedKeys();
-				if (rs.next()) {
-					int id = rs.getInt(1);
-					System.out.println("id " + id + " affected!");
-				}
-			} else {
-				System.out.println("No rows affected!");
-			}
+		INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId) VALUES (?, ?, ?, ?)
 
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			DB.closeResultSet(rs);
-			DB.closeStatement(st);
-			DB.closeConnection();
-		}
-
-	Observações:
-
-	As queries podem ser dinamica, criadas por variaveis, desta forma utilizamos o marcador "?" no local onde vai uma variavel, por exemplo:
-
-		INSERT INTO seller Name, Email, BirthDate, BaseSalary, DepartmentId VALUES (?, ?, ?, ?)"
-
-	Determinados os dados desde marcadores com o método "set" de PreparedStatement da seguinte forma "set<tipo>(<local do marcador>, <valor>)", por exemplo:
+	Determinamos os dados desde marcadores com o método "set" de PreparedStatement da seguinte forma "set<tipo>(<local do marcador>, <valor>)", por exemplo:
 
 		st.setString(1, "Fernando Ribeira");
 		st.setString(2, "fernando@gmail.com");
@@ -3727,14 +4281,14 @@
 
 		st = conn.prepareStatement("<query INSERT - UPDATE - DELETE a ser executada>", Statement.RETURN_GENERATED_KEYS);
 
-	Para verificarmos os dados de um ResultSet percorremo so mesmo com um "while" no seguinte formato:
+	Para verificarmos os dados de um ResultSet percorremos o mesmo com um "while" no seguinte formato:
 
 		rs = st.executeQuery();
 		while (rs.next()) {
-			System.out.println(rs.get<tipo>("<coluna da tabela>""));
+			System.out.println(rs.get<tipo>("<coluna da tabela>"));
 		}
 
-	O método "get" pega do dado baseado no seu tipo e nome da coluna, por exemplo:
+	O método "get" pega o dado baseado no seu tipo e nome da coluna, por exemplo:
 
 		rs.getInt("Id")
 		rs.getString("Name")
@@ -3743,8 +4297,6 @@
 
 	Exemplo de código:
 
-		Connection conn = null;
-		
 		try {
 			...
 		} catch (SQLException e) {
@@ -3774,7 +4326,7 @@
 
 	Para evitarmos que uma transação seja interrompida e deixe os dados inconsistentes devemos desativar o "Auto Commit" e deixar o Commit ser feito pelo programador, assim como o rollback se necessário.
 
-	Para desativarmos o auto commit devemos executar o comando abaixo no objeto Connection:
+	Para desativarmos o auto commit devemos executar o comando abaixo no objeto "Connection" utilizado:
 
 		setAutoCommit(false);
 
@@ -3786,60 +4338,59 @@
 
 		rollback();
 
-- Padrão de projeto DAO (Data Access Object)
+- Visão geral do JavaFX e MVC
 
-	O padrão de projeto DAO surgiu com a necessidade de separarmos a lógica de negócios da lógica de persistência de dados. Este padrão permite que possamos mudar a forma de persistência sem que isso influencie em nada na lógica de negócio, além de tornar nossas classes mais legíveis.
+	JavaFX é o sucessor do Swing e Java AWT para interfaces gráficas com Java.
 
-	Classes DAO são responsáveis por trocar informações com o SGBD e fornecer operações CRUD e de pesquisas, elas devem ser capazes de buscar dados no banco e transformar esses em objetos ou lista de objetos, fazendo uso de listas genéricas, também deverão receber os objetos, converter em instruções SQL e mandar para o banco de dados.
+	JavaFX pode ser usado para desktop, web e mobile.
 
-	Toda interação com a base de dados se dará através destas classes, nunca das classes de negócio, muito menos de formulários.
+	Uma tela JavaFX pode ser montada via código Java, ou via código FXML.
 
-	Se aplicarmos este padrão corretamente ele vai abstrair completamente o modo de busca e gravação dos dados, tornando isso transparente para aplicação e facilitando muito na hora de fazermos manutenção na aplicação ou migrarmos de banco de dados.
+	Com o lançamento do Java 11, JavaFX não é mais parte do JDK, ele precisa ser baixado e configurado separadamente, atualmente ela é mantido pela Gluon: https://gluonhq.com/products/javafx/
 
-	Também conseguimos centralizar a troca de dados com o SGBD (Sistema Gerenciador de Banco de Dados), teremos um ponto único de acesso a dados, tendo assim nossa aplicação um ótimo design orientado a objeto.
+	JavaFX é projetado sobre o padrão MVC:
 
-	Para cada entidade, haverá um objeto (interface) responsável por fazer acesso a dados relacionado a esta entidade. Por exemplo:
+	Model - consiste nos dados de domínio e toda lógica de transformação desses dados
+	Views - São as telas de interação com o usuário (UI)
+	Controllers - São as classes responsáveis por tratar as interações do usuário com as views (manipulação de eventos de interação com as telas)
 
-	Cliente: ClienteDao
-	Produto: ProdutoDao
-	Pedido: PedidoDao
+- Instalação do SceneBuilder
 
-	Cada DAO será definido por uma interface com métodos abstratos "insert", "update", "delete" e "select".
+	Acessar https://gluonhq.com/products/scene-builder/ e baixar a versão mais nova, instalação padrão.
 
-	Criamos então uma classe com o nome do formato de conexão, por exemplo "ClienteDaoJDBC" ou "ClienteDaoJPA" (dependendo do tipo de banco utilizado), implementamos a iterface DAO do tipo e declaramos os métodos conforme devem ser utilizados.
+- JavaFX SDK
 
-	A injeção de dependência pode ser feita por meio do padrão de projeto "Factory", é uma classe que instancia os objetos DAO baseados na implementações especificas.
+	Acessar https://gluonhq.com/products/javafx/ e baixar na versão especifica para a versão java instalada.
 
-	Exemplo de interface:
+	A instalação é descompactar e mover para a pasta de "libs" do Eclipse.
 
-		package model.dao;
+- Configuração do Eclipse
 
-		import java.util.List;
+	Baixar o plugin no "eclipse Marketplace".
 
-		import model.entities.Department;
+	Configurar os paths do SceneBuilder e do JavaFX SDK nas configurações em "Window -> Preferences -> JavaFX".
 
-		public interface DepartmentDao {
+- Criação de projeto JavaFX
 
-			void insert(Department obj);
-			void update(Department obj);
-			void deleteById(Integer id);
-			Department findById(Integer id);
-			List<Department> findAll();
-			
-		}
+	Criar uma "User Library" no Eclipse:
 
-	Exemplo de factory:
+	Window -> Preferences -> Java -> Build path -> User Libraries
+	Dê o nome da "User Library" de "JavaFX"
+	Add external JARs -> localize os arquivos ".jar" do JavaFX SDK e insira todos (de uma vez).
 
-		package model.dao;
+	Criar um novo projeto do tipo JavaFX.
 
-		import model.dao.impl.SellerDaoJDBC;
+	Ao criar um novo projeto no Eclipse, na segunda tela (Java Settings), clicar na aba "Libraries", clicar no "Modulepath", clicar em "Add library", selecionar "User Library" e adicinonar nossa biblioteca criada.
 
-		public class DaoFactory {
+	Apos o projeto ser criado configurar o projeto conforme descrito abaixo:
 
-			public static SellerDao createSellerDao() {
-				return new SellerDaoJDBC();
-			}
-			
-		}
+	Botão direito no projeto -> Run As -> Run Configurations -> Arguments -> VM Arguments
 
+	Inserir a linha:
+
+	--module-path "<caminho da pasta lib do JavaFX JDK>"" --add-modules=javafx.fxml,javafx.controls
+
+	Por exemplo:
+
+	--module-path "C:\java-libs\javafx-sdk\lib" --add-modules=javafx.fxml,javafx.controls
 

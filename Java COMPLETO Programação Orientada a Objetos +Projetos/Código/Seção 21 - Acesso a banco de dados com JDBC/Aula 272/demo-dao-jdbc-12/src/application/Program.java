@@ -40,13 +40,18 @@ public class Program {
 		System.out.println();
 
 		System.out.println("----- Test 5: Seller update -----");
-		seller = sellerDao.findById(1);
+		seller = sellerDao.findById(2);
 		seller.setName("Bolacha1");
 		seller.setEmail("bolacha@gmail.com1");
 		seller.setBirthDate(new Date());
 		seller.setBaseSalary(10001.0);
 		seller.setDepartment(department);
 		sellerDao.update(seller);
+		System.out.println();
+		
+		System.out.println("----- Test 6: Seller delete -----");
+		sellerDao.deleteById(28);
+		System.out.println();
 		
 	}
 }

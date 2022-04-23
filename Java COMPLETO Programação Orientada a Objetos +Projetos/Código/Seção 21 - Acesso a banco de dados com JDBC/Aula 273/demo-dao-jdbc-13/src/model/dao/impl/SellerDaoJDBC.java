@@ -1,7 +1,6 @@
 package model.dao.impl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,12 +62,11 @@ public class SellerDaoJDBC implements SellerDao {
 	@Override
 	public void update(Seller obj) {
 		PreparedStatement st = null;
-		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
 					"UPDATE seller "
 					+ "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
-					+ "WHERE Id = ?", Statement.RETURN_GENERATED_KEYS);
+					+ "WHERE Id = ?");
 			st.setString(1, obj.getName());
 			st.setString(2, obj.getEmail());
 			st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
@@ -84,14 +82,27 @@ public class SellerDaoJDBC implements SellerDao {
 		} catch (SQLException e) {
 			throw new DbStandardException(e.getMessage());
 		} finally {
-			Db.closeResultSet(rs);
 			Db.closeStatement(st);
 		}
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+			st.setInt(1, id);
+			int rowsAffected = st.executeUpdate();
+			if (rowsAffected > 0) {
+				System.out.println("Seller Id: " + id + " deleted with success!");
+			} else {
+				throw new DbStandardException("No seller deleted!");
+			}
+		} catch (SQLException e) {
+			throw new DbStandardException(e.getMessage());
+		} finally {
+			Db.closeStatement(st);
+		}
 		
 	}
 
