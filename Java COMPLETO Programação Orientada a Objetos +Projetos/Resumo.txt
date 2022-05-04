@@ -187,6 +187,14 @@
 
 	Para interromper o debug: pressionar as teclas "CTRL F2"
 
+- Aumentar tamanho dos icones do Eclipse
+
+	Adicionar ao arquivo Eclupse.ini:
+
+	-Dswt.enable.autoScale=true
+	-Dswt.autoScale=150
+	-Dswt.autoScale.method=nearest
+
 - Estrutura de uma aplicação Java
 
 	Uma aplicação Java basicamente é composta por classes.
@@ -3486,7 +3494,7 @@
 	Criar uma "User Library" no Eclipse:
 
 	Window -> Preferences -> Java -> Build path -> User Libraries
-	Dê o nome da "User Library" de "MySQLConnector"
+	Dê o nome da "User Library" de "MySQL Connector"
 	Add external JARs -> localize o arquivo jar e insira
 
 	Ao criar um novo projeto no Eclipse, na segunda tela (Java Settings), clicar na aba "Libraries", clicar no "Modulepath", clicar em "Add library", selecionar "User Library" e adicinonar nossa biblioteca criada.
@@ -4360,23 +4368,29 @@
 
 - JavaFX SDK
 
-	Acessar https://gluonhq.com/products/javafx/ e baixar na versão especifica para a versão java instalada.
+	Necessário baixar o SDK em "https://gluonhq.com/products/javafx/".
 
-	A instalação é descompactar e mover para a pasta de "libs" do Eclipse.
+	Baixar especificamente para a versão java instalada (verificar versão com o comando "javac -version" no prompt).
 
-- Configuração do Eclipse
+	Escolher o SDK da arquitetura e S.O. corretos.
 
-	Baixar o plugin no "eclipse Marketplace".
-
-	Configurar os paths do SceneBuilder e do JavaFX SDK nas configurações em "Window -> Preferences -> JavaFX".
-
-- Criação de projeto JavaFX
+	Extrair o arquivo compactado e copiar a pasta gerada para a pasta de "libs" do Eclipse.
 
 	Criar uma "User Library" no Eclipse:
 
 	Window -> Preferences -> Java -> Build path -> User Libraries
 	Dê o nome da "User Library" de "JavaFX"
-	Add external JARs -> localize os arquivos ".jar" do JavaFX SDK e insira todos (de uma vez).
+	Add external JARs -> localize os arquivos jar na pasta "lib" e insira.
+
+	Ao criar um novo projeto no Eclipse, na segunda tela (Java Settings), clicar na aba "Libraries", clicar no "Modulepath", clicar em "Add library", selecionar "User Library" e adicinonar nossa biblioteca criada.
+
+- Configuração do Eclipse
+
+	Baixar o plugin "E(fx)clipse" versão 3.4.1 ou superior no "Eclipse Marketplace".
+
+	Configurar os paths do SceneBuilder e do JavaFX SDK nas configurações em "Window -> Preferences -> JavaFX".
+
+- Criação de projeto JavaFX
 
 	Criar um novo projeto do tipo JavaFX.
 
@@ -4392,5 +4406,90 @@
 
 	Por exemplo:
 
-	--module-path "C:\java-libs\javafx-sdk\lib" --add-modules=javafx.fxml,javafx.controls
+	--module-path "C:\Users\Fernando\eclipse-workspace\libs\javafx-sdk-17.0.2\lib" --add-modules=javafx.fxml,javafx.controls
+
+- Estrutura básica de uma aplicação JavaFX
+
+	Uma aplicação JavaFX deve ter uma classe "Main" que extende de "Application" (javafx.application.Application).
+	
+	Esta herança possue alguns metodos, entre eles: init, start e stop.
+
+	O método "start" é abstrato e obrigatorio, nele esta o codigo da aplicação JavaFX.
+
+	O método "init" contempla codigo que deve ser executado antes da aplicação iniciar.
+
+	O método "stop" contempla código que deve ser executado assim que a aplicação finalizar.
+
+	O método "main" chama a aplicação executando o método estatico "launch" da classe "Application".
+
+	A lógica do JavaFX é um palco com cenas, no método "start" é passado como argumento o palco (criado automaticamente), em seguida é criado o objeto "BorderPane" que é o a borda do palco, em seguida criamos um objeto "Scene" que é a cena atrelada a borda, aplicamos um estilo CSS nesta cena, vinculamos a cena ao palco e por fim mostramos o palco.
+
+	Exemplo básico:
+
+		package application;
+	
+		import javafx.application.Application;
+		import javafx.stage.Stage;
+		import javafx.scene.Scene;
+		import javafx.scene.layout.BorderPane;
+
+		public class Main extends Application {
+			@Override
+			public void start(Stage primaryStage) {
+				try {
+					BorderPane root = new BorderPane();
+					Scene scene = new Scene(root,400,400);
+					scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+					primaryStage.setScene(scene);
+					primaryStage.show();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			public static void main(String[] args) {
+				launch(args);
+			}
+		}
+
+
+	Este código esta em uma estrutura "try - catch" pois pode lançar uma exceção.
+
+- Arquivo FXML
+
+	São arquivos no formato XML das cenas, eles que possuem os componentes que serão mostrados.
+
+	Por exemplo:
+
+		<?xml version="1.0" encoding="UTF-8"?>
+
+		<?import javafx.scene.control.Button?>
+		<?import javafx.scene.control.Label?>
+		<?import javafx.scene.layout.AnchorPane?>
+
+		<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+		   <children>
+		      <Button layoutX="173.0" layoutY="172.0" mnemonicParsing="false" text="Botão" />
+		      <Label layoutX="163.0" layoutY="101.0" text="Clique aqui !" />
+		   </children>
+		</AnchorPane>
+
+	Por padrão o documento é criado no Eclipse e editado no SceneBuilder.
+
+	Ponto de atenção, na declaração precisamos ajustar a versão utilizada para evitar mensagem de warning:
+
+	Por exemplo:
+
+		xmlns="http://javafx.com/javafx/17.0.2-ea"
+
+	Precisamos também apagar o arquivo "modules.info".
+
+	Para mostrar a cena utilizamos o código abaixo:
+
+		Parent parent = FXMLLoader.load(getClass().getResource("/gui/View.fxml"));
+		Scene scene = new Scene(parent);
+		stage.setScene(scene);
+		stage.show();
+
+	Declaramos um objeto do tipo "Parent" que receberá o caminho do arquivo FXML, em seguida adicionamos este objeto a uma cena, adiconamos a cena ao palco e exibimos o mesmo.
 
