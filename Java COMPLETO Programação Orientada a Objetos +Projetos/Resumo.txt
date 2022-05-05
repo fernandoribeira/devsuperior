@@ -4362,6 +4362,21 @@
 	Views - São as telas de interação com o usuário (UI)
 	Controllers - São as classes responsáveis por tratar as interações do usuário com as views (manipulação de eventos de interação com as telas)
 
+	Existe uma hierarquia de objetos no JavaFX:
+
+	Stage
+		Scene
+			Node
+				Node
+				Node
+				...
+
+	Stage é o palco, a estrutura principal do programa.
+
+	Scene é uma cena (uma tela) que será adicionada ao palco.
+
+	Node são nós, objetos dentro das cenas.
+
 - Instalação do SceneBuilder
 
 	Acessar https://gluonhq.com/products/scene-builder/ e baixar a versão mais nova, instalação padrão.
@@ -4370,11 +4385,9 @@
 
 	Necessário baixar o SDK em "https://gluonhq.com/products/javafx/".
 
-	Baixar especificamente para a versão java instalada (verificar versão com o comando "javac -version" no prompt).
-
 	Escolher o SDK da arquitetura e S.O. corretos.
 
-	Extrair o arquivo compactado e copiar a pasta gerada para a pasta de "libs" do Eclipse.
+	Extrair o arquivo compactado e copiar a pasta gerada para a pasta de "libs" do usuário do Eclipse.
 
 	Criar uma "User Library" no Eclipse:
 
@@ -4406,7 +4419,7 @@
 
 	Por exemplo:
 
-	--module-path "C:\Users\Fernando\eclipse-workspace\libs\javafx-sdk-17.0.2\lib" --add-modules=javafx.fxml,javafx.controls
+	--module-path "C:\Users\Fernando\eclipse-workspace\libs\javafx-sdk-18.0.1\lib" --add-modules=javafx.fxml,javafx.controls
 
 - Estrutura básica de uma aplicação JavaFX
 
@@ -4476,13 +4489,7 @@
 
 	Por padrão o documento é criado no Eclipse e editado no SceneBuilder.
 
-	Ponto de atenção, na declaração precisamos ajustar a versão utilizada para evitar mensagem de warning:
-
-	Por exemplo:
-
-		xmlns="http://javafx.com/javafx/17.0.2-ea"
-
-	Precisamos também apagar o arquivo "modules.info".
+	Precisamos apagar o arquivo "module-info.java" para evitar erro na execução do programa.
 
 	Para mostrar a cena utilizamos o código abaixo:
 
@@ -4492,4 +4499,250 @@
 		stage.show();
 
 	Declaramos um objeto do tipo "Parent" que receberá o caminho do arquivo FXML, em seguida adicionamos este objeto a uma cena, adiconamos a cena ao palco e exibimos o mesmo.
+
+- Carregando recursos
+
+	Recursos são arquivos ou imagens ou materiais de outros formatos.
+
+	O arquivo é carregado a partir do "classpath", não de um caminho do sistema de arquivos, buscando pelo recurso mesmo quando sua aplicação já estiver empacotada.
+
+	Exemplo:
+
+		getClass().getResource("<caminho do arquivo ou URL>")
+
+		getClass().getResource("/gui/View.fxml")
+
+	Este recurso é atribuido (carregado) em um objeto "Parent" do JavaFX pelo método estatico "FXMLLoader.load", por exemplo:
+
+		Parent parent = FXMLLoader.load(getClass().getResource("/gui/View.fxml"));
+
+- Tratando eventos com JavaFX
+
+	Temos os seguintes passos par atratativas de ecentos no JavaFX:
+
+	Crie uma classe controladora da sua view
+	No controlador:
+		Criar um atributo correspondente ao controle desejado e anotá-lo com @FXML
+		Criar um método para tratar o evento desejado do controle e anotá-lo com @FXML
+	Na view (Scene Builder):
+		Associar a view ao controller (aba Controller)
+		Selecione o controle e associe a ele o id (aba Code)
+		Selecione o controle e associe o método ao evento desejado (aba Code)
+
+	Passos detalhados:
+
+	Para tratar eventos precisamos criar uma classe "Controller" para cada arquivo FXML.
+
+	O nome da classe deve ser "<nome do arquivo FXML>Controller", por exemplo, "ViewController".
+
+	Este arquivo Controller deve estar na mesma pasta do arquivo FXML.
+
+	Em seu conteúdo devemos declarar cada elemento que executara uma ação como variavel com anotação "@FXML", por exemplo:
+
+		@FXML
+		private Button btnTest;
+
+	Vinculamos este Controller ao aquivo FXML no Scene Builder, primeiro selecionamos a cena no menu lateral esquerdo "Document", depois clicamos em "Controller" no menu lateral esquerdo, na caixa de selação combobox "Controller Class" selecionamos o arquivo correspondente.
+
+	Vinculamos os elementos com as variaveis, para isso devemos clicar no elemento desejado, em seguida no meni lateral esquerdo "Code" e no campo "fx:id" colocar o nome da variavel desejada.
+
+	Declaramos então os métodos de ações para os elementos, seguindo o padrão de ações do Scene Builder, estas informações aparecem ao clicar no elemento, em seguida clicar na aba "Code" no menu lateral direito do Scene Builder, existem diversas ações, a padrão é "On Action".
+
+	Desta forma declaramos um método com anotação "@FXML" relacionado ao elemento e a essa ação, seguindo a nomenclatura "on<nome do elemento><ação>", por exemplo:
+
+		@FXML
+		public void onBtnTestAction() {
+			...
+		}
+
+- Mostrando alertas
+
+	Criar uma classe utilitaria para mostrar o alerta, por exemplo:
+
+		package gui.util;
+
+		import javafx.scene.control.Alert;
+		import javafx.scene.control.Alert.AlertType;
+
+		public class Alerts {
+
+			public static void ShowALert(String title, String header, String content, AlertType type) {
+				Alert alert = new Alert(type);
+				alert.setTitle(title);
+				alert.setHeaderText(header);
+				alert.setContentText(content);
+				alert.show();
+			}
+			
+		}
+
+	Esta classe esta no pacote "gui.util" e possui um método estatico que mostra um alerta recebendo com paramentros o titulo, cabeçalho, corpo e tipo de alerta.
+
+	Para mostrar este alerta basta chamar o método com os parametros necessarios, exemplo abaixo:
+
+		Alerts.ShowALert("Alert title", "Alert header", "Alert content", AlertType.INFORMATION);
+
+	O tipo do alerta é um ENUM com os os tipos determinados de alertas.
+
+- Coletando e alterando texto de TextField
+
+	Utilizar o método "getText()" para coletar o texto.
+
+	Utilizar o método "setText()" para alterar o texto.
+
+	Os dados são em String, caso sejam utilizados para calculo devemos fazer o parse antes.
+
+- Alteração de texto em Label
+
+	Utilizar o método "setText()" para alterar o texto.
+
+	Os dados são em String, caso sejam utilizados numeros devemos utilizar "String.format" antes.
+
+- Constraints (limitações)
+
+	Normalmente desejamos limitar a inserção de dados, seja por tipo, quantidade ou outros fatores.
+
+	Por exemplo, em um campo de numero não podemos digitar letras, em um campo qualuqer devemos limitar a X caracteres.
+
+	Para isso criamos uma classe utilitaria "Constraints" com métodos estaticos que verificam o status dos campos apos cada modificação, permitindo ou não a modificação. Caso seja valida a modificação é feita, caso não seja valida o valor atual é mantido.
+
+	Para isso utilziamos a interface funcional "Initializable" com uma expressão lambda com o Regex necessário.
+
+	Exemplo de classe Constraints:
+
+		package gui.util;
+
+		import javafx.scene.control.TextField;
+
+		public class Constraints {
+
+			public static void setTextFieldInteger(TextField txt) {
+				txt.textProperty().addListener((obs, oldValue, newValue) -> {
+					if (newValue != null && !newValue.matches("\\d*")) {
+						txt.setText(oldValue);
+					}
+				});
+			}
+
+			public static void setTextFieldMaxLength(TextField txt, int max) {
+				txt.textProperty().addListener((obs, oldValue, newValue) -> {
+					if (newValue != null && newValue.length() > max) {
+						txt.setText(oldValue);
+					}
+				});
+			}
+
+			public static void setTextFieldDouble(TextField txt) {
+				txt.textProperty().addListener((obs, oldValue, newValue) -> {
+					if (newValue != null && !newValue.matches("\\d*([\\.]\\d*)?")) {
+						txt.setText(oldValue);
+					}
+				});
+			}
+
+		}
+
+	Exemplo de utilização da classe em uma controller de view:
+
+		public class ViewController implements Initializable {
+
+			@FXML
+			private TextField txtFirstNumber;
+			@FXML
+			private TextField txtSecondNumber;
+			@FXML
+			private Button btnCalculate;
+			@FXML
+			private Label lblResult;
+			
+			@FXML
+			public void onCalculateAction() {
+				try {
+					Locale.setDefault(Locale.US);
+					double firstNumber = Double.parseDouble(txtFirstNumber.getText());
+					double secondNumber = Double.parseDouble(txtSecondNumber.getText());
+					double result = firstNumber + secondNumber;
+					lblResult.setText(String.format("%.2f", result));
+				} catch (NumberFormatException e) {
+					Alerts.showAlert("Error", "Parse error", e.getMessage(), AlertType.ERROR);
+				}
+			}
+
+			@Override
+			public void initialize(URL url, ResourceBundle rb) {
+				Constraints.setTextFieldDouble(txtFirstNumber);
+				Constraints.setTextFieldDouble(txtSecondNumber);
+				Constraints.setTextFieldMaxLength(txtFirstNumber, 12);
+				Constraints.setTextFieldMaxLength(txtSecondNumber, 12);
+			}
+			
+		}
+
+	Ao implementar "Initializable" precisamos declara o método abstrato "initialize", ele sempre é executado ao instanciar a classe, aplciando assim as restrições nos campos.
+
+- Elemento ComboBox
+
+	Complexo, exemplo de uso:
+
+		public class ViewController implements Initializable {
+
+			@FXML
+			private ComboBox<Person> cbxPerson;
+			@FXML
+			private Button btnAll;
+			private ObservableList<Person> obsList;
+			
+			@FXML
+			public void onCbxPersonAction() {
+				Person person = cbxPerson.getSelectionModel().getSelectedItem();
+				System.out.println(person);
+			}
+			
+			@FXML
+			public void onBtnAllAction() {
+				for (Person person : cbxPerson.getItems()) {
+					System.out.println(person);
+				}
+			}
+
+			@Override
+			public void initialize(URL url, ResourceBundle rb) {
+
+				List<Person> list = new ArrayList<>();
+				list.add(new Person(1, "Maria", "maria@gmail.com"));
+				list.add(new Person(2, "Alex", "alex@gmail.com"));
+				list.add(new Person(3, "Bob", "bob@gmail.com"));
+
+				obsList = FXCollections.observableArrayList(list);
+				cbxPerson.setItems(obsList);
+
+				Callback<ListView<Person>, ListCell<Person>> factory = lv -> new ListCell<Person>() {
+					@Override
+					protected void updateItem(Person item, boolean empty) {
+						super.updateItem(item, empty);
+						setText(empty ? "" : item.getName());
+					}
+				};
+				
+				cbxPerson.setCellFactory(factory);
+				cbxPerson.setButtonCell(factory.call(null));
+			}
+
+		}
+
+- Containers JavaFX
+
+	São componentes especiais que servem para acomodar outros componentes para organizarmos as telas.
+
+	AnchorPane - container onde podemos "ancorar" elementos definindo as distancias manualmente, fixando a posição dos elementos mesmo com resize da tela.
+
+	GridPane - container em forma de grade (matriz de linhas e colunas), normalmente utilizado em formularios, é utilizado dentro de outros containers.
+
+	SplitPane - container dividido de forma horizontal ou vertical, ao criar ja coloca um AnchorPane em cada lado.
+
+	HBox & VBox - container facil de usar e com comportamento previsivel, colocando os componentes na sequencia, de forma horizontal ou vertical.
+
+	BorderPane - contaniner dividido em 5 partes, cima, direita, baxio, esquerda e centro.
+
+	ScrollPane - utilizado em conjunto de outros container, criando barras de rolagem horizontal ou vertical quando um componente não cabe na tela.
 
