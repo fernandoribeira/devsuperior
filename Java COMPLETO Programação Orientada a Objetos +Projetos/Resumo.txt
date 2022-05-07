@@ -4746,3 +4746,201 @@
 
 	ScrollPane - utilizado em conjunto de outros container, criando barras de rolagem horizontal ou vertical quando um componente não cabe na tela.
 
+- Visão geral sobre mapeamento objeto-relacional
+
+	Object-Relational Mapping (ORM), em português, mapeamento objeto-relacional, é uma técnica para aproximar o paradigma de desenvolvimento de aplicações orientadas a objetos ao paradigma do banco de dados relacional. O uso da técnica de mapeamento objeto-relacional é realizado através de um mapeador objeto-relacional que geralmente é a biblioteca ou framework que ajuda no mapeamento e uso do banco de dados.
+
+	Quando estamos trabalhando com aplicações orientadas a objetos que utilizam banco de dados relacionais para armazenamento de informações, temos um problema chamado impedância objeto-relacional devido às diferenças entre os 2 paradigmas.
+
+	O banco de dados relacional trabalha com tabelas e relações entre elas para representar modelos da vida real. Dentro das tabelas temos várias colunas e a unidade que temos para representação no modelo relacional é uma linha.
+
+	O paradigma orientado a objetos possui um modo um pouco diferente de trabalhar. Nele nós temos diversos elementos como classes, propriedades, visibilidade, herança e interfaces. A unidade quando falamos de orientação a objetos é o objeto que representa algo do mundo real, seja abstrato ou concreto.
+
+	As principais dificuldades que essas diferenças entre paradigmas causa:
+
+	Representação dos dados e do modelo, já que as estruturas são distintas.
+	Mapeamento entre os tipos de dados da linguagem de programação e do banco de dados.
+	Modelo de integridade relacional do banco relacional.
+
+	Pensando nos problemas descritos acima, o ORM define uma técnica para realizar a conciliação entre os 2 modelos. Uma das partes centrais é através do mapeamento de linhas para objetos.
+
+	As bibliotecas ou frameworks ORM definem o modo como os dados serão mapeados entre os ambientes, como serão acessados e gravados. Isso diminui o tempo de desenvolvimento, uma vez que não é necessário desenvolver toda essa parte. Outra vantagem está na adaptação de novos membros na equipe, como muitos projetos comerciais utilizam a mesma ferramenta, é possível encontrar membros que já estão acostumados com o padrão de trabalho.
+
+- JPA (Java Persistence API)
+
+	Java Persistence API (JPA) é a especificação padrão da plataforma Java EE (pacote javax.persistence) para mapeamento objeto-relacional e persistência de dados.
+
+	JPA é apenas uma especificação (documento), para trabalhar com JPA é preciso incluir no projeto uma implementação da API, por exemplo utilizando o Hibernate.
+
+- Principais classes:
+
+	EntityManager
+
+		Um objeto EntityManager encapsula uma conexão com a base de dados e serve para efetuar operações de acesso a dados (inserção, remoção, deleção, atualização) em entidades (clientes, produtos, pedidos, etc.) por ele monitoradas em um mesmo contexto de persistência.
+
+		Escopo: tipicamente mantem-se uma instância única de EntityManager para cada thread do sistema (no caso de aplicações web, para cada requisição ao sistema).
+
+	EntityManagerFactory
+
+		Um objeto EntityManagerFactory é utilizado para instanciar objetos EntityManager.
+
+		Escopo: tipicamente mantem-se uma instância única de EntityManagerFactory para toda aplicação.
+
+- Maven
+
+	Maven é um Projeto da Apache que tem como foco um gerenciamento de bibliotecas entre outras responsabilidades, ele permite constuir projetos, gerenciar dependencias, gerar documentações.
+
+	Criar um novo projeto Maven
+
+		File -> New -> Other -> Maven Project
+		Marcar Create Simple Project -> Next
+		Group Id: <nome do pacote da empresa>
+		Artifact Id: <nome do projeto>
+		Finish 
+
+	Atualize o Maven do projeto para a versão utilizada do Java
+
+		Edite o arquivo pom.xml
+		Inclua o conteúdo abaixo
+
+			<properties>
+				<maven.compiler.source>...<sua versão do Java vai aqui>...</maven.compiler.source>
+				<maven.compiler.target>...<sua versão do Java vai aqui>...</maven.compiler.target>
+			</properties>
+
+		Dê um "Maven -> Update Project" para que a alteração seja aplicada.
+
+	Inclua as dependências Maven a serem baixadas
+
+		Edite o arquivo pom.xml inserindo os dados das dependencias coleradas no site " https://mvnrepository.com", por exemplo:
+
+			<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>5.4.12.Final</version>
+			</dependency>
+
+	Configure o JPA no seu projeto por meio do arquivo persistence.xml
+
+		Crie uma pasta "META-INF" a partir da pasta "src/main/resources"
+		Dentro da pasta META-INF crie um arquivo "persistence.xml"
+		Insira este conteúdo do arquivo persistence.xml: 
+
+			<?xml version="1.0" encoding="UTF-8"?>
+			<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+					http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd" version="2.1">
+				<persistence-unit name="exemplo-jpa" transaction-type="RESOURCE_LOCAL">
+					<properties>
+						<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/aulajpa?useSSL=false&amp;serverTimezone=UTC" />
+						<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+						<property name="javax.persistence.jdbc.user" value="root" />
+						<property name="javax.persistence.jdbc.password" value="" />
+						<property name="hibernate.hbm2ddl.auto" value="update" />
+						<!-- https://docs.jboss.org/hibernate/orm/5.4/javadocs/org/hibernate/dialect/package-summary.html -->
+						<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
+					</properties>
+				</persistence-unit>
+			</persistence>
+
+		Altere as configurações de url, user e password conforme necessidade.
+
+	 Inclua os MAPEAMENTOS na classe de domínio
+
+	 	Basta inserir "@Entity" antes da declaração da classe.
+
+	 	Para definir a chave primária colocamos o código abaixo antes do campo que será a chave (normalmente "id").
+
+	 		@Id
+			@GeneratedValue(strategy=GenerationType.IDENTITY)
+
+		Segue exemplo:
+
+			@Entity
+			public class Pessoa {
+			
+				@Id
+				@GeneratedValue(strategy=GenerationType.IDENTITY)
+				private Integer id;
+
+- Gravando dados
+
+	Instanciar um "EntityManagerFactory", exemplo abaixo:
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("<nome do persistence-unit name>");
+
+	Instanciar um "EntityManager", exemplo abaixo:
+
+		EntityManager em = emf.createEntityManager();
+		
+	Iniciar a transação, exemplo abaixo:
+
+		em.getTransaction().begin();
+
+	Gravar no banco, exemplo abaixo:
+
+		em.persist(<objeto a ser gravado>);
+
+	Encerrar a transação, exemplo abaixo:
+
+		em.getTransaction().commit();
+
+	Encerrando os objetos "EntityManager", exemplo abaixo:
+
+		em.close();
+		emf.close();
+
+	Exemplo completo:
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("maven02");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(p1);
+		em.persist(p2);
+		em.persist(p3);
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+
+- Buscando dados por id
+
+	Criar o "EntityManagerFactory" e o "EntityManager", criar o objeto com o método "em.find()" para buscar o objeto, encerrar o "EntityManagerFactory" e o "EntityManager".
+
+	O método "em.find()" tem a seguinte estrutura:
+
+		<objeto> <variavel> = em.find(<classe>.class, <id a ser buscado)
+
+	Exemplo completo:
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("maven02");
+		EntityManager em = emf.createEntityManager();
+		
+		Pessoa p = em.find(Pessoa.class, 2);
+		System.out.println(p);
+		
+		em.close();
+		emf.close();
+
+- Remover dados por id
+
+	O processo de exclusão é similir ao de inclusão, porem utilizamos o método "em.remove" no lugar de "em.persist".
+
+	Exemplo completo abaixo:
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("maven02");
+		EntityManager em = emf.createEntityManager();
+		
+		em.getTransaction().begin();
+		Pessoa p = em.find(Pessoa.class, 2);
+		em.remove(p);
+		em.getTransaction().commit();
+		
+		em.close();
+		emf.close();
+		
+		System.out.println("Pronto!");
+
+	O JPA so consegue remover dados de entidades monitoradas, caso contrario sera apresentado erro.
+
+	Para isso devemos instanciar um objeto com o método "em.find" e em seguida enviar este objeto para exclusão.
+
