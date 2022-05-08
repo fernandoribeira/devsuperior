@@ -1637,7 +1637,7 @@
 
 		- Atualiza seu repositório local em relação ao repositório remoto
 		ATENÇÃO: este comando só é necessário se você criou o .gitignore pelo Github
-		git pull origin master
+		git pull origin main
 
 		- Verifica arquivos
 		git status
@@ -1650,7 +1650,7 @@
 
 		- Envia o repositório local para o repositório remoto
 		ATENÇÃO: nas próximas vezes basta fazer: git push
-		git push -u origin master
+		git push -u origin main
 
 	Salvando uma nova versão
 
@@ -4943,4 +4943,3 @@
 	O JPA so consegue remover dados de entidades monitoradas, caso contrario sera apresentado erro.
 
 	Para isso devemos instanciar um objeto com o método "em.find" e em seguida enviar este objeto para exclusão.
-
